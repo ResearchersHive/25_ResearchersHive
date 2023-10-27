@@ -32,10 +32,15 @@ def user_creation(request):
 @api_view(['GET'])
 def user_verification(request):
     username = request.query_params.get('username')
+    password = request.query_params.get('password')
     userExist = User.objects.filter(username=username).exists()
 
     if userExist:
-        return Response({"message": "User Exists"}, status=status.HTTP_200_CREATED)
+        data = User.objects.filter(username=username)
+        if(password == data.get('password')):
+            return Response({"message": "User Exists"}, status=status.HTTP_200_CREATED)    
+        else:
+            return Response({"message": "Password Mismatch"}, status=status.HTTP_400_BAD_REQUEST)
     else :
         return Response({"message": "User doesn't Exist"}, status=status.HTTP_400_BAD_REQUEST)
 

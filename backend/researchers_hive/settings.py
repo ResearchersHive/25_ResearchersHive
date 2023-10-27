@@ -77,8 +77,16 @@ WSGI_APPLICATION = 'researchers_hive.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'NAME': 'ResearchersHive',
+        # 'ENFORCE_SCHEMA': True,
+        'CLIENT': {
+            # 'name': 'ResearchersHive',
+            # 'host': 'mongodb+srv://pradhyumnapalore:MongoDb@mernapp.sepwhff.mongodb.net/ResearchersHive?retryWrites=true&w=majority&appName=AtlasApp'
+            'host' : 'mongodb+srv://pradhyumnapalore:MongoDb@mernapp.sepwhff.mongodb.net/ResearchersHive?retryWrites=true&w=majority&appName=AtlasApp',
+            # 'username': 'pradhyumnapalore',
+            # 'password': 'MongoDb',
+        }  
     }
 }
 
