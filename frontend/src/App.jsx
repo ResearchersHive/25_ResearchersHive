@@ -28,6 +28,8 @@ function App() {
             </Route>
             <Route path="/login" element={<Login />}>
             </Route>
+            <Route path="/author" element={<Author />}></Route>
+            <Route path="/scholar" element={<Scholar />}></Route>
             {/* {cook === true ?
             <>
               <Route path="/author" element={<Author />}></Route>

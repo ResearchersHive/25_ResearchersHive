@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'user'
+    'user',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -48,8 +49,14 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:5173',  # Add your frontend origin here
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'researchers_hive.urls'
 

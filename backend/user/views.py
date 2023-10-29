@@ -1,9 +1,11 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from django.contrib.auth.hashers import check_password
 
 from .models import User
 from .serializers import *
+import bcrypt
 
 # @api_view(['GET', 'POST'])
 # def users_list(request):
@@ -22,27 +24,39 @@ def user_creation(request):
     if userExist:
         return Response({"message": "User already exists"}, status=status.HTTP_400_BAD_REQUEST)
     else :
+        password = data.get('password')
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        data['password'] = hashed_password.decode('utf-8')
+        print(data['password'])
         serializer = UserSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_CREATED)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response({"message": "User data is not in correct format"}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
+@api_view(['POST'])
 def user_verification(request):
-    username = request.query_params.get('username')
-    password = request.query_params.get('password')
-    userExist = User.objects.filter(username=username).exists()
+    data = request.data
+    email = data.get('email')
+    password = data.get('password')
+    print(f"Provided username: {email}")
+    print(f"Provided [pass]: {password}")
 
-    if userExist:
-        data = User.objects.filter(username=username)
-        if(password == data.get('password')):
-            return Response({"message": "User Exists"}, status=status.HTTP_200_CREATED)    
+    try:
+        user = User.objects.get(email=email)
+      #  passwrd = User.objects.get(username=username)
+        if user.check_password(password):
+            dic = {}
+            dic["message"] = "User authenticated"
+            dic["profile"] = user.profile
+            return Response(dic, status=status.HTTP_200_OK)
         else:
-            return Response({"message": "Password Mismatch"}, status=status.HTTP_400_BAD_REQUEST)
-    else :
-        return Response({"message": "User doesn't Exist"}, status=status.HTTP_400_BAD_REQUEST)
+             return Response({"message": "Password mismatch"}, status=status.HTTP_400_BAD_REQUEST)
+    except User.DoesNotExist:
+        return Response({"message": "User doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
+
+   
 
 # @api_view(['GET'])
 # def user_verification(request):

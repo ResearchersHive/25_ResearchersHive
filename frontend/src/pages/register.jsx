@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    role: "",
+    username: "",
+    profile: "",
     email: "",
     password: "",
   });
@@ -40,7 +40,7 @@ const Register = () => {
     e.preventDefault();
     try {
       const result = await axios.post(
-        "http://localhost:4000/api/registration/",
+        "http://localhost:8000/api/user/register",
         formData
       );
       if (result.status === 200) {
@@ -101,8 +101,8 @@ const Register = () => {
               <input
                 type="text"
                 class="form-control"
-                name="name"
-                value={formData.name}
+                name="username"
+                value={formData.username}
                 placeholder="Enter your name"
                 onChange={captureChanges}
                 required
@@ -157,8 +157,8 @@ const Register = () => {
               </label>
               <select
                 class="form-select"
-                name="role"
-                value={formData.role}
+                name="profile"
+                value={formData.profile}
                 onChange={captureChanges}
                 required>
                 <option value="" disabled selected>
@@ -172,7 +172,7 @@ const Register = () => {
               Register
             </button>
             <p></p>
-            <a href="http://localhost:3000/login">
+            <a href="/login">
               <p>Already have an Account</p>
             </a>
           </form>
@@ -180,7 +180,7 @@ const Register = () => {
       </div>
       <div id="myModal" className="modal">
         <div className="modal-content">
-          <p>Successfully Registered!</p>
+          <p id="modalPara">Successfully Registered!</p>
         </div>
       </div>
     </div>

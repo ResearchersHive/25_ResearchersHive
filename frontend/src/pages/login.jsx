@@ -4,32 +4,33 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
+
 const Login = () => {
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
   });
 
   const navigate = useNavigate();
 
   const captureChanges = (e) => {
-    const { username, value } = e.target;
+    const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [username]: value,
+      [name]: value,
     }));
   };
   const saveChanges = async (e) => {
     e.preventDefault();
     try{
       const response = await axios.post(
-        "http://localhost:4000/api/login/",
+        "http://localhost:8000/api/user/login",
         formData
       );
           console.log(response)
-          if(response.data.msg === "Success") {
-            const cookies = new Cookies(null, { path: '/' });
-            cookies.set('token', response.data.token);
+          if(response.data.message === "User authenticated") {
+            // const cookies = new Cookies(null, { path: '/' });
+            // cookies.set('token', response.data.token);
 
             const modal = document.getElementById("myModal");
             const modalP = document.getElementById("modalPara");
@@ -39,7 +40,7 @@ const Login = () => {
             setTimeout(() => {
               modal.style.display = "none";
               
-              if (response.data.role === "scholar") {
+              if (response.data.profile === "scholar") {
                 navigate('/scholar');
               } else {
                 navigate('/author');
@@ -55,7 +56,7 @@ const Login = () => {
             console.log(response.data.msg)
             setTimeout(() => {
               modal.style.display = "none";
-              navigate("/login");
+              // navigate("/login");
             }, 2000);
           }
       } catch (error) {
@@ -70,15 +71,15 @@ const Login = () => {
         <h5 class="card-title">Login</h5>
         <form onSubmit={saveChanges}>
         <div class="mb-3">
-              <label for="username" class="form-label">
-                Name
+              <label for="email" class="form-label">
+                Email address
               </label>
               <input
-                type="text"
+                type="email"
                 class="form-control"
-                name="username"
-                value={formData.username}
-                placeholder="Enter your name"
+                name="email"
+                value={formData.email}
+                placeholder="Enter your email address"
                 onChange={captureChanges}
                 required
               />
@@ -96,7 +97,7 @@ const Login = () => {
           </div>
           <button type="submit" class="btn btn-primary">Login</button>
           <p></p>
-          <a href='http://localhost:5174/register'><p>Create new Account</p></a>
+          <a href='http://localhost:5173/register'><p>Create new Account</p></a>
         </form>
       </div>
     </div>
