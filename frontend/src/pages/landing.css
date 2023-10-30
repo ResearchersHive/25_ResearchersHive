@@ -1,23 +1,39 @@
-.info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.landing-container {
+  background-color: #f7f7f7;
+  min-height: 100vh;
+  padding-bottom: 50px;
 }
 
-.img{
-    display: flex;
-    align-items: right;
-    justify-content: center;
+.main-content {
+  padding-top: 50px;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-text {
+  text-align: center;
+}
+
+.info-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .center {
-    margin: auto;
-    width: 20%;
-    padding: 20px;
-  }
+  text-align: center;
+}
+
+.benefits-container {
+  background-color: #ffffff;
+  padding: 50px 0;
+}
 
 .center-div {
-    width: 10%;
-    margin-left: 40%;
-    padding-left: 20px;
-  }
+  text-align: center;
+  margin-top: 20px;
+}

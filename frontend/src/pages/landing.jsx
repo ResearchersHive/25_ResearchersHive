@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import CustomNavbar from "../components/Navbar";
 import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -13,84 +12,14 @@ import Card from 'react-bootstrap/Card';
 
 
 const Landing = () => {
-    const [formData, setFormData] = useState({
-        username: '',
-        password: '',
-    });
-
     const navigate = useNavigate();
-
-    const captureChanges = (e) => {
-        const { username, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [username]: value,
-        }));
-    };
-    const saveChanges = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await axios.post(
-                "http://localhost:4000/api/login/",
-                formData
-            );
-            console.log(response)
-            if (response.data.msg === "Success") {
-                const cookies = new Cookies(null, { path: '/' });
-                cookies.set('token', response.data.token);
-
-                const modal = document.getElementById("myModal");
-                const modalP = document.getElementById("modalPara");
-                modalP.innerHTML = "Successfully Logged In!";
-                modal.style.display = "block";
-                console.log("Login Successful!");
-                setTimeout(() => {
-                    modal.style.display = "none";
-
-                    if (response.data.role === "scholar") {
-                        navigate('/scholar');
-                    } else {
-                        navigate('/author');
-                    }
-                }, 2000);
-
-            } else {
-                const modal = document.getElementById("myModal");
-                const modalP = document.getElementById("modalPara");
-                modalP.innerHTML = "Unsuccessful Login : " + response.data.msg;
-                modal.style.display = "block";
-                console.log("Login Unsuccessful");
-                console.log(response.data.msg)
-                setTimeout(() => {
-                    modal.style.display = "none";
-                    navigate("/login");
-                }, 2000);
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    };
-
     return (
-        <div>
-            <Navbar>
-                <Container>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="justify-content-end" style={{ width: "100%" }}>
-                            <Nav.Link href="#home">Research</Nav.Link>
-                            <Nav.Link href="#link">Publications</Nav.Link>
-                            <Nav.Link href="#link">Search</Nav.Link>
-                            <Button type="submit">Login</Button>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Container>
-            </Navbar>
-            <br></br>
-            <Container>
-                <Row style={{ width: "100%" }}>
-                    <Col xs lg="6" className="info">
-                        <div>
+        <div className="landing-container">
+            <CustomNavbar />
+            <Container className="main-content">
+                <Row className="info">
+                <Col xs={12} lg={6}>
+                <div className="info-text">
                             <h2 style={{ justifyContent: "center" }}>XYZ</h2>
                             <Row xs={2} md={4} lg={6} fluid="false" className="justify-content-middle">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                                 Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -100,7 +29,8 @@ const Landing = () => {
                             <Button type="submit">Know More</Button>
                         </div>
                     </Col>
-                    <Col xs lg="6" className="imge">
+                    <Col xs={12} lg={6}>
+                        <div className="info-image">
                         <Image
                             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/s1B6UkAAAAASUVORK5CYII="
                             alt="Empty placeholder"
@@ -108,6 +38,7 @@ const Landing = () => {
                             height={300}
                             thumbnail
                         />
+                        </div>
                     </Col>
                 </Row>
             </Container>
@@ -153,9 +84,9 @@ const Landing = () => {
                     </Card>
                 </div>
             </Container>
-            <br></br>
-            <Button className="center-div"> Register</Button>
-            <br></br>
+            <div className="center-div">
+        <Button variant="primary">Register</Button>
+      </div>
         </div>
     );
 };
