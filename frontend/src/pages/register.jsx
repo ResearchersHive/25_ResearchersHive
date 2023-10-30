@@ -175,8 +175,8 @@ const Register = () => {
           </form>
         </div>
       </div>
-      <div id="myModal" className="modal">
-        <div className="modal-content">
+      <div id="myModal" className="modal-1">
+        <div className="modal-1-content">
           <p id="modalPara">Successfully Registered!</p>
         </div>
       </div>
