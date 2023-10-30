@@ -6,6 +6,8 @@ import Login from './pages/login.jsx';
 import Author from './pages/author.jsx';
 import Scholar from './pages/scholar.jsx';
 import Landing from './pages/landing'
+import Search from './pages/search.jsx';
+
 
 function App() {
   return (
@@ -19,9 +21,9 @@ function App() {
             </Route>
             <Route path="/author" element={<Author />}></Route>
             <Route path="/scholar" element={<Scholar />}></Route>
-            <Route path="/landing" element={<Landing />}>
+            <Route path="/landing" element={<Landing />}></Route>
+            <Route path="/search" element={<Search />}></Route>
             <Route path="*" element={<Landing />}>
-            </Route>
             </Route>
           </Routes>
         </div>
