@@ -39,8 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'user',
-    'corsheaders'
+    'corsheaders',
+    'rest_framework_simplejwt'
 ]
+
+AUTH_USER_MODEL = "user.User"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -76,6 +79,12 @@ TEMPLATES = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
 WSGI_APPLICATION = 'researchers_hive.wsgi.application'
 
 
@@ -86,15 +95,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'ResearchersHive',
-        # 'ENFORCE_SCHEMA': True,
         'CLIENT': {
-            # 'name': 'ResearchersHive',
-            # 'host': 'mongodb+srv://pradhyumnapalore:MongoDb@mernapp.sepwhff.mongodb.net/ResearchersHive?retryWrites=true&w=majority&appName=AtlasApp'
-            'host' : 'mongodb+srv://pradhyumnapalore:MongoDb@mernapp.sepwhff.mongodb.net/ResearchersHive?retryWrites=true&w=majority&appName=AtlasApp',
-            # 'username': 'pradhyumnapalore',
-            # 'password': 'MongoDb',
+            'host' : 'mongodb://localhost:27017',
         }  
     }
+}
+
+SIMPLE_JWT = {
+    "USER_ID_FIELD": "email",
 }
 
 # Password validation

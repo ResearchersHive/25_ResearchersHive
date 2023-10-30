@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import "./login.css"
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'universal-cookie';
 
 
 const Login = () => {
@@ -28,15 +27,14 @@ const Login = () => {
         formData
       );
           console.log(response)
-          if(response.data.message === "User authenticated") {
-            // const cookies = new Cookies(null, { path: '/' });
-            // cookies.set('token', response.data.token);
-
+          if(response.status === 200){
             const modal = document.getElementById("myModal");
             const modalP = document.getElementById("modalPara");
             modalP.innerHTML = "Successfully Logged In!";
             modal.style.display = "block";
             console.log("Login Successful!");
+            console.log(response.data)
+            localStorage.setItem("token", response.data.access);
             setTimeout(() => {
               modal.style.display = "none";
               
@@ -47,36 +45,34 @@ const Login = () => {
               }
             }, 2000);
 
-          } else {
-            const modal = document.getElementById("myModal");
-            const modalP = document.getElementById("modalPara");
-            modalP.innerHTML = "Unsuccessful Login : " + response.data.msg;
-            modal.style.display = "block";
-            console.log("Login Unsuccessful");
-            console.log(response.data.msg)
-            setTimeout(() => {
-              modal.style.display = "none";
-              // navigate("/login");
-            }, 2000);
           }
       } catch (error) {
         console.error("Error:", error);
+        const modal = document.getElementById("myModal");
+        const modalP = document.getElementById("modalPara");
+        modalP.innerHTML = "Unsuccessful Login : " + error.response.data.detail;
+        modal.style.display = "block";
+        console.log("Login Unsuccessful");
+        setTimeout(() => {
+          modal.style.display = "none";
+          // navigate("/login");
+        }, 2000);
       }
   };
 
   return (
-    <div class="pageBody">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Login</h5>
+    <div className="pageBody">
+    <div className="card">
+      <div className="card-body">
+        <h5 className="card-title">Login</h5>
         <form onSubmit={saveChanges}>
-        <div class="mb-3">
-              <label for="email" class="form-label">
+        <div className="mb-3">
+              <label htmlFor="email" className="form-label">
                 Email address
               </label>
               <input
                 type="email"
-                class="form-control"
+                className="form-control"
                 name="email"
                 value={formData.email}
                 placeholder="Enter your email address"
@@ -84,18 +80,18 @@ const Login = () => {
                 required
               />
             </div>
-          <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">Password</label>
             <input
               type="password"
-              class="form-control"
+              className="form-control"
               name="password"
               value={formData.password}
               placeholder="Enter your password"
               onChange={captureChanges}
               required />
           </div>
-          <button type="submit" class="btn btn-primary">Login</button>
+          <button type="submit" className="btn btn-primary">Login</button>
           <p></p>
           <a href='http://localhost:5173/register'><p>Create new Account</p></a>
         </form>

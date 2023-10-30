@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import "./register.css";
 import { useNavigate } from "react-router-dom";
@@ -43,8 +43,7 @@ const Register = () => {
         "http://localhost:8000/api/user/register",
         formData
       );
-      if (result.status === 200) {
-        console.log("1")
+      if (result.status === 201) {
         const modal = document.getElementById("myModal");
         const modalP = document.getElementById("modalPara");
         modalP.innerHTML = "Successfully Registered";
@@ -53,18 +52,16 @@ const Register = () => {
           modal.style.display = "none";
           navigate("/login");
         }, 2000);
-      }else if(result.status === 201) {
-        console.log("2")
+      } else if(result.status === 400) {
         const modal = document.getElementById("myModal");
         const modalP = document.getElementById("modalPara");
-        modalP.innerHTML = "User Already Exists";
+        modalP.innerHTML = result.data.message;
         modal.style.display = "block";
         setTimeout(() => {
           modal.style.display = "none";
           navigate("/login");
         }, 6000);
       }
-      // navigate("/login")
     } catch (error) {
       console.error("Error:", error);
     }
@@ -89,18 +86,18 @@ const Register = () => {
   };
 
   return (
-    <div class="pageBody" style={bodyStyle}>
-      <div class="card" style={cardStyle}>
-        <div class="card-body">
-          <h5 class="card-title">Registration Form</h5>
+    <div className="pageBody" style={bodyStyle}>
+      <div className="card" style={cardStyle}>
+        <div className="card-body">
+          <h5 className="card-title">Registration Form</h5>
           <form onSubmit={saveChanges}>
-            <div class="mb-3">
-              <label for="name" class="form-label">
+            <div className="mb-3">
+              <label htmlFor="name" className="form-label">
                 Name
               </label>
               <input
                 type="text"
-                class="form-control"
+                className="form-control"
                 name="username"
                 value={formData.username}
                 placeholder="Enter your name"
@@ -108,13 +105,13 @@ const Register = () => {
                 required
               />
             </div>
-            <div class="mb-3">
-              <label for="email" class="form-label">
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">
                 Email address
               </label>
               <input
                 type="email"
-                class="form-control"
+                className="form-control"
                 name="email"
                 value={formData.email}
                 placeholder="Enter your email address"
@@ -122,13 +119,13 @@ const Register = () => {
                 required
               />
             </div>
-            <div class="mb-3">
-              <label for="password" class="form-label">
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">
                 Password
               </label>
               <input
                 type="password"
-                class="form-control"
+                className="form-control"
                 id="password"
                 name="password"
                 value={formData.password}
@@ -137,13 +134,13 @@ const Register = () => {
                 required
               />
             </div>
-            <div class="mb-3">
-              <label class="form-label">
+            <div className="mb-3">
+              <label className="form-label">
               Confirm Password
               </label>
               <input
                 type="password"
-                class="form-control"
+                className="form-control"
                 placeholder="Confirm password"
                 id="cPass"
                 onKeyUp={confirmPass}
@@ -151,12 +148,12 @@ const Register = () => {
               />
               <p id="confirmation"></p>
             </div>
-            <div class="mb-3">
-              <label for="role" class="form-label">
+            <div className="mb-3">
+              <label htmlFor="role" className="form-label">
                 Role
               </label>
               <select
-                class="form-select"
+                className="form-select"
                 name="profile"
                 value={formData.profile}
                 onChange={captureChanges}
@@ -168,7 +165,7 @@ const Register = () => {
                 <option value="author">Author</option>
               </select>
             </div>
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" className="btn btn-primary">
               Register
             </button>
             <p></p>
