@@ -22,8 +22,8 @@ def paperInfo(request):
     if request.method == 'GET':
         if 'id' in request.query_params:
             paper_id = request.query_params['id']
-            url = f'https://api.semanticscholar.org/graph/v1/paper/{paper_id}?fields=title,abstract,year,authors,venue,publicationVenue,tldr'
-            
+            url = f'https://api.semanticscholar.org/graph/v1/paper/{paper_id}?fields=title,abstract,year,authors,venue,publicationVenue,tldr,externalIds'
+
             try:
                 response = requests.get(url, timeout=5)
                 response.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx)
@@ -42,6 +42,7 @@ def paperInfo(request):
                     'year': data['year'],
                     'authors': ', '.join(author['name'] for author in data['authors']),
                     'keywords':', '.join(keyword for keyword in keywords),
+                    'paperPdf': "https://arxiv.org/pdf/" + data['externalIds']['ArXiv'] + ".pdf",
                     # 'authors':author_names,
                     'venue': data['venue'],
                     'venue_type': data['publicationVenue']['type'],
