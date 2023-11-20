@@ -11,8 +11,6 @@ import Paper from './pages/paper.jsx';
 import Dashboard from './pages/dashboard.jsx';
 import Profile from './pages/profile.jsx';
 
-
-
 function App() {
   return (
     <div className="App">
