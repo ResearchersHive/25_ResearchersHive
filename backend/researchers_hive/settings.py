@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'user',
     'search',
+    'graph',
     'corsheaders',
     'rest_framework_simplejwt'
 ]

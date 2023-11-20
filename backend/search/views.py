@@ -27,7 +27,7 @@ def details(request: Request) -> Response:
     if request.method == 'GET':
         if 'id' in request.query_params:
             paper_id = request.query_params['id']
-            url = f'https://api.semanticscholar.org/graph/v1/paper/{paper_id}?fields=url,title,year,authors'
+            url = f'https://api.semanticscholar.org/graph/v1/paper/{paper_id}?fields=url,abstract,title,year,authors'
             response = requests.get(url, timeout=5)
             if response.status_code == 200:
                 history_entry = History.objects.create(details=response.json())
