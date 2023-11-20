@@ -18,3 +18,31 @@ def user_creation(request):
     else :
         get_user_model().objects.create_user(username=data.get('username'), password=data.get('password'), email=data.get('email'), profile=data.get('profile'))
         return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+def addPaper(request, id, paper_id):
+    try:
+        user = User.objects.get(id=id)
+    except User.DoesNotExist:
+        return Response({"error": "User doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
+
+    papers = user.papers.split(',') if user.papers else []
+    paper_id_str = str(paper_id)
+    if paper_id not in papers:
+        papers.append(paper_id_str)
+        user.papers = ','.join(papers)
+        user.save()
+        return Response({"message": f"Paper {paper_id} added successfully"}, status=status.HTTP_200_OK)
+    else:
+        return Response({"message": f"Paper {paper_id} already exists for the user"}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+def showPapers(request, id):
+    print("----------",id)
+    try:
+        user = User.objects.get(id=id)
+    except User.DoesNotExist:
+        return Response({"error": "User doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
+
+    papers = user.papers.split(',') if user.papers else []
+    return Response({"message": f"Papers : {user.papers}"}, status=status.HTTP_200_OK)
