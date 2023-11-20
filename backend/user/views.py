@@ -5,11 +5,12 @@ from django.contrib.auth.hashers import check_password
 
 from django.contrib.auth import get_user_model
 from .serializers import *
+from paperInfo.utils import paperInfo
 
 @api_view(['POST'])
 def user_creation(request):
     data = request.data
-    if not data.get('username') or not data.get('password') or not data.get('email') or not data.get('profile'):
+    if not data.get('username') or not data.get('password') or not data.get('email') :
         return Response({"message": "Please provide all the details"}, status=status.HTTP_400_BAD_REQUEST)
     userExist = User.objects.filter(username=data.get('username')).exists()
 
@@ -28,11 +29,16 @@ def addPaper(request, id, paper_id):
 
     papers = user.papers.split(',') if user.papers else []
     paper_id_str = str(paper_id)
+    print("4321")
     if paper_id not in papers:
+        paper_Info = paperInfo(paper_id_str)
+        if "error" in paper_Info:
+            return Response({"error": f"Paper Id : {paper_id} is incorrect"}, status=status.HTTP_400_BAD_REQUEST)
+        print(paper_Info)
         papers.append(paper_id_str)
         user.papers = ','.join(papers)
         user.save()
-        return Response({"message": f"Paper {paper_id} added successfully"}, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK, data=paper_Info)
     else:
         return Response({"message": f"Paper {paper_id} already exists for the user"}, status=status.HTTP_400_BAD_REQUEST)
     

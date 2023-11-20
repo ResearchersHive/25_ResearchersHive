@@ -4,11 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 # from .models import PaperInfo
-from .serializers import PaperInfoSerializer
-import nltk
-# nltk.data.path.append("../NLTK")
-# from nltk import pos_tag
-# from nltk.corpus import stopwords
+from .serializers import *
 from nltk import FreqDist
 from nltk.tokenize.treebank import TreebankWordDetokenizer
 
@@ -23,44 +19,62 @@ def paperInfo(request):
     if request.method == 'GET':
         if 'id' in request.query_params:
             paper_id = request.query_params['id']
-            url = f'https://api.semanticscholar.org/graph/v1/paper/{paper_id}?fields=title,abstract,year,authors,venue,publicationVenue,tldr,externalIds'
-
-            try:
-                response = requests.get(url, timeout=5)
-                response.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx)
-                data = response.json()
-                keywords = []
-                keywords = extract_keywords(data['abstract'])
-                print("Keywords:", keywords)
-
-                author_names = ''
-                for author in data['authors']:
-                    author_names += author['name'] + ', '
+            paper = PaperInfo.get_paper_by_id(paper_id)
+            if paper != None :
+                print("From DB")
                 paper_info = {
-                    'paperId': data['paperId'],
-                    'title': data['title'],
-                    'abstract': data['abstract'] + "\n. It means : " + data['tldr']['text'],
-                    'year': data['year'],
-                    'authors': ', '.join(author['name'] for author in data['authors']),
-                    'keywords':', '.join(keyword for keyword in keywords),
-                    'paperPdf': "https://arxiv.org/pdf/" + data['externalIds']['ArXiv'] + ".pdf",
-                    # 'authors':author_names,
-                    'venue': data['venue'],
-                    'venue_type': data['publicationVenue']['type'],
-                    'venue_link': data['publicationVenue']['url'],
-                }
+                        'paperId': paper.paperId,
+                        'title': paper.title,
+                        'abstract': paper.abstract,
+                        'year': paper.year,
+                        'authors': paper.authors,
+                        'keywords':paper.keywords,
+                        'paperPdf': paper.paperPdf,
+                        # 'authors':author_names,
+                        'venue': paper.venue,
+                        'venue_type': paper.venue_type,
+                        'venue_link': paper.venue_link,
+                    }
+                return Response(status=status.HTTP_200_OK, data=paper_info)
+            else :
+                print("From API")
+                url = f'https://api.semanticscholar.org/graph/v1/paper/{paper_id}?fields=title,abstract,year,authors,venue,publicationVenue,tldr,externalIds'
 
-                serializer = PaperInfoSerializer(data=paper_info)
-                if serializer.is_valid():
-                    serializer.save()
-                else:
-                    return Response(status=status.HTTP_400_BAD_REQUEST, data={'error': f'Invalid data: {serializer.errors}'})
+                try:
+                    response = requests.get(url, timeout=5)
+                    response.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx)
+                    data = response.json()
+                    keywords = []
+                    keywords = extract_keywords(data['abstract'])
+                    print("Keywords:", keywords)
+
+                    author_names = ''
+                    for author in data['authors']:
+                        author_names += author['name'] + ', '
+                    paper_info = {
+                        'paperId': data['paperId'],
+                        'title': data['title'],
+                        'abstract': data['abstract'] + "\n. It means : " + data['tldr']['text'],
+                        'year': data['year'],
+                        'authors': ', '.join(author['name'] for author in data['authors']),
+                        'keywords':', '.join(keyword for keyword in keywords),
+                        'paperPdf': "https://arxiv.org/pdf/" + data['externalIds']['ArXiv'] + ".pdf",
+                        # 'authors':author_names,
+                        'venue': data['venue'],
+                        'venue_type': data['publicationVenue']['type'],
+                        'venue_link': data['publicationVenue']['url'],
+                    }
+                    serializer = PaperInfoSerializer(data=paper_info)
+                    if serializer.is_valid():
+                        serializer.save()
+                    else:
+                        return Response(status=status.HTTP_400_BAD_REQUEST, data={'error': f'Invalid data: {serializer.errors}'})
+                    
+                except requests.exceptions.RequestException as e:
+                    return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={'error': f'Error fetching data: {e}'})
                 
-            except requests.exceptions.RequestException as e:
-                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={'error': f'Error fetching data: {e}'})
+                return Response(status=status.HTTP_200_OK, data=paper_info)
             
-            return Response(status=status.HTTP_200_OK, data=paper_info)
-        
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'error': 'Id required'})
     
     return Response(status=status.HTTP_400_BAD_REQUEST, data={'error': 'Only GET request is supported'})

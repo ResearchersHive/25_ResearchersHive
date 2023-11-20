@@ -14,3 +14,11 @@ class PaperInfo(models.Model):
 
     def __str__(self):
         return self.title
+    
+    @classmethod
+    def get_paper_by_id(cls, paper_id):
+        try:
+            paper_info = cls.objects.get(paperId=paper_id)
+            return paper_info
+        except cls.DoesNotExist:
+            return None
