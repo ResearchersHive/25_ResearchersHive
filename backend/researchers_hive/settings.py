@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'search',
     'paperInfo',
     'graph',
+    'comments',
     'corsheaders',
     'rest_framework_simplejwt'
 ]

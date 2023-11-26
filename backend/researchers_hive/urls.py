@@ -25,4 +25,5 @@ urlpatterns = [
     path('api/search/', include('search.urls')),
     path('api/paper/', include('paperInfo.urls')),
     path('api/graph/', include('graph.urls')),
+    path('api/comments/',include('comments.urls')),
 ]
