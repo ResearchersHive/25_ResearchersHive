@@ -105,6 +105,20 @@
 
 .select-search-options {
     list-style: none;
+    width: 100%;
+    margin: 0 !important;
+}
+
+div:has(> .select-search-options) {
+    background-color: red;
+    width: 30%;
+    left: unset !important;
+    right: 0 !important;
+    margin: 0 !important;
+}
+
+ul, ol {
+    padding: 0 !important;
 }
 
 .select-search-option,
