@@ -28,7 +28,7 @@ def get_author_papers(author_id: str) -> list[Paper]:
     url = f'https://api.semanticscholar.org/graph/v1/author/{author_id}/papers?fields=url,abstract,title,year,authors'
     response = requests.get(url, timeout=5)
     if response.status_code == 200:
-        return [Paper.from_dict(paper) for paper in response.json()]
+        return [Paper.from_dict(paper) for paper in response.json()['data']]
     raise Exception('Internal server error')
 
 def get_paper_details(paper_id: str) -> Paper:

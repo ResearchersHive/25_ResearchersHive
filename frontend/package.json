@@ -15,8 +15,10 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",
     "react-dom": "^18.2.0",
+    "react-force-graph-3d": "^1.24.0",
     "react-router-dom": "^6.17.0",
     "react-select-search": "^4.1.7",
+    "react-sizeme": "^3.0.2",
     "universal-cookie": "^6.1.1"
   },
   "devDependencies": {

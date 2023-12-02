@@ -10,7 +10,7 @@ import Search from './pages/search.jsx';
 import Paper from './pages/paper.jsx';
 import Dashboard from './pages/dashboard.jsx';
 import Profile from './pages/profile.jsx';
-
+import Graph from './pages/graph.jsx';
 
 
 function App() {
@@ -30,6 +30,7 @@ function App() {
             <Route path="/paper" element={<Paper />}></Route>
             <Route path="/dashboard" element={<Dashboard />}></Route>
             <Route path="/profile" element={<Profile />}></Route>
+            <Route path="/graph" element={<Graph initialPaperId="649def34f8be52c8b66281af98ae884c09aef38b" />}></Route>
             <Route path="*" element={<Landing />}>
             </Route>
           </Routes>
