@@ -1,6 +1,7 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import check_password
 
 from django.contrib.auth import get_user_model
@@ -21,7 +22,10 @@ def user_creation(request):
         return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def addPaper(request, id, paper_id):
+    if id != request.user.id:
+        return Response({"error": "You are not allowed to add paper to this account"}, status=status.HTTP_400_BAD_REQUEST)
     try:
         user = User.objects.get(id=id)
     except User.DoesNotExist:
@@ -52,3 +56,14 @@ def showPapers(request, id):
 
     papers = user.papers.split(',') if user.papers else []
     return Response({"message": f"Papers : {user.papers}"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_info(request):
+    user = request.user
+    return Response(status=status.HTTP_200_OK, data={
+        'username': user.username,
+        'email': user.email,
+        'profile': user.profile,
+        'id': user.id,
+    })
