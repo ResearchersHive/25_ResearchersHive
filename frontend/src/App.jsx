@@ -25,7 +25,7 @@ function App() {
             <Route path="/author" element={<Author />}></Route>
             <Route path="/scholar" element={<Scholar />}></Route>
             <Route path="/landing" element={<Landing />}></Route>
-            <Route path="/paper" element={<Paper />}></Route>
+            <Route path="/paper/:id" element={<Paper />}></Route>
             <Route path="/dashboard" element={<Dashboard />}></Route>
             <Route path="/profile" element={<Profile />}></Route>
             <Route path="/graph" element={<Graph initialPaperId="649def34f8be52c8b66281af98ae884c09aef38b" />}></Route>
