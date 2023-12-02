@@ -5,9 +5,11 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { Card } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import { UserApi } from "../utils/requests";
 
 const Dashboard = () => {
   const [paperData, setPaperData] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
   // const paperData = [
   //   {
   //     id: 1,
@@ -70,6 +72,15 @@ const Dashboard = () => {
     };
 
     fetchData();
+
+    UserApi.getRecommendations()
+      .then((data) => {
+        console.log(data);
+        setRecommendations(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   return (
@@ -100,6 +111,26 @@ const Dashboard = () => {
         <h2 style={{margin:'20px'}}>Recently Read By You:</h2>
         <Row>
           {paperData.map((card) => (
+            <Col key={card.id} sm={12} md={6} lg={2}>
+              <Card style={{ width: '15rem', margin: '10px' }}>
+                <Card.Body>
+                  <Card.Title>{card.title}</Card.Title>
+                  <Card.Text style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {card.description}
+                  </Card.Text>
+                  <Card.Link href={card.link} target="_blank">
+                    Continue Reading...
+                  </Card.Link>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+      <Container fluid>
+        <h2 style={{margin:'20px'}}>Recommended For You:</h2>
+        <Row>
+          {recommendations.map((card) => (
             <Col key={card.id} sm={12} md={6} lg={2}>
               <Card style={{ width: '15rem', margin: '10px' }}>
                 <Card.Body>

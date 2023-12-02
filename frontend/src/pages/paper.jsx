@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { PaperApi } from "../utils/requests";
+import { UserApi } from "../utils/requests";
 
 const Paper = () => {
   const { id } = useParams();
@@ -25,7 +25,7 @@ const Paper = () => {
   const handleShow = () => setShow(true);
 
   useEffect(() => {
-    PaperApi.getPaper(id).then((response) => {
+    UserApi.getPaper(id).then((response) => {
       console.log(response);
       setPaperName(response.title);
       setVenueType(response.venue_type);

@@ -51,12 +51,22 @@ export class SearchApi {
   }
 }
 
-export class PaperApi {
+export class UserApi {
   static getPaper(paperId) {
     const userId = localStorage.getItem("id");
     const token = localStorage.getItem("token");
     return fetch(`${userApi}/${userId}/papers/${paperId}/`, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((response) => response.json());
+  }
+
+  static getRecommendations() {
+    const token = localStorage.getItem("token");
+    return fetch(`${userApi}/recommendations`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
