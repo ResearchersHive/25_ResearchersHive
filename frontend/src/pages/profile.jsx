@@ -18,23 +18,41 @@ const Profile  = () => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
-  // const updateComment = (comment) => {
-  //   const commentToEdit = commentData.find(comment => comment.id === comment.id);
-  //   commentToEdit.description = comment.description
-  //   setCommentData(commentToEdit)
-  //   setShow(true);
-  // }
-  const updateComment = (comment) => {
-    // console.log(commentData)
-    console.log(comment)
-    const updatedComments = commentData.map((c) =>
-      c.id === comment.id ? { ...c, description: comment.description } : c
-    );
-    console.log(updatedComments)
-    setCommentData(updatedComments);
+
+  const updateComment = async(comment) => {
     
-    setShow(false);
-  }
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/comments/updateComment/${comment._id}/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user:'Abd',
+          text: comment.description, // Assuming 'text' is the field you want to update
+        }),
+      });
+      console.log(comment)
+      if (response.ok) {
+        const updatedComments = commentData.map((c) =>
+          c._id === comment._id ? { ...c, text: comment.text } : c
+        );
+        setCommentData(updatedComments);
+        setShow(false); // Close the modal after successful update
+  
+        console.log(`Comment with ID ${comment._id} updated successfully`);
+        alert('Comment updated successfully'); // Show success message
+      } else {
+        console.error(`Failed to update comment with ID ${comment._id}`);
+        alert('Failed to update comment. Please try again.'); // Show failure message
+      }
+    } catch (error) {
+      console.error("Error updating comment:", error);
+      alert('An error occurred while updating the comment. Please try again.'); // Show error message
+    }
+  };
+    
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -65,34 +83,20 @@ const Profile  = () => {
             link: 'http://localhost:5173/paper',
           }
         ];
+        const commentResponse = await fetch('http://127.0.0.1:8000/api/comments/getAllComment/',{
+          method: 'POST', // or 'POST' or any other HTTP method your API expects
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any other headers if needed
+          },
+          // Include the userid in the request body
+          body: JSON.stringify({
+            user: 'Abd', // Replace with the actual user id
+          }),
         
-        const commentData = [
-          {
-            id: 1,
-            title: 'Paper 1',
-            description: 'Comment......',
-            link: 'http://localhost:5173/paper',
-          },
-          {
-            id: 2,
-            title: 'Paper 2',
-            description: 'Comment......',
-            link: 'http://localhost:5173/paper',
-          },
-          {
-            id: 3,
-            title: 'Paper 3',
-            description: 'Comment......',
-            link: 'http://localhost:5173/paper',
-          },
-          {
-            id: 4,
-            title: 'Paper 4',
-            description: 'Comment......',
-            link: 'http://localhost:5173/paper',
-          }
-        ];
-
+        });
+        const commentData = await commentResponse.json();
+        console.log(commentData)
         setPaperData(data);
         setCommentData(commentData);
       } catch (error) {
@@ -104,18 +108,47 @@ const Profile  = () => {
   }, []);
 
   const handleEditComment = (commentId) => {
-    const commentToEdit = commentData.find(comment => comment.id === commentId);
-    console.log(commentToEdit)
-    setTerm(commentToEdit);
-    setShow(true);
-    console.log(`Edit comment with ID ${commentId}`);
+    const commentToEdit = commentData.find(comment => comment._id === commentId);
+    if (commentToEdit) {
+      console.log(commentToEdit);
+      setTerm(commentToEdit);
+      setShow(true);
+      console.log(`Edit comment with ID ${commentId}`);
+    } else {
+      console.error(`Comment with ID ${commentId} not found`);
+    }
   };
+  
 
-  const handleDeleteComment = (commentId) => {
-    const updatedComments = commentData.filter((comment) => comment.id !== commentId);
-    setCommentData(updatedComments);
-    console.log(`Deleted comment with ID ${commentId}`);
-  };
+  const handleDeleteComment = async(commentId) => {
+   
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/comments/deleteComment/${commentId}/`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user: 'Abd', // Replace with the actual user id
+          }),
+        });
+    
+        if (response.ok) {
+          const updatedComments = commentData.filter((c) => c._id !== commentId);
+          setCommentData(updatedComments);
+    
+          console.log(`Comment with ID ${commentId} deleted successfully`);
+          alert('Comment deleted successfully');
+        } else {
+          console.error(`Failed to delete comment with ID ${commentId}`);
+          alert('Failed to delete comment. Please try again.');
+        }
+      } catch (error) {
+        console.error("Error deleting comment:", error);
+        alert('An error occurred while deleting the comment. Please try again.');
+      }
+    };
+    
   return (
     <>
       <CustomNavbar />
@@ -179,15 +212,15 @@ const Profile  = () => {
             <Col key={card.id} sm={12} md={6} lg={2}>
               <Card style={{ width: '15rem', margin: '10px' }}>
                 <Card.Body>
-                  <Card.Title>{card.title}</Card.Title>
+                  <Card.Title>{card.paperTitle}</Card.Title>
                   <Card.Text style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {card.description}
+                    {card.text}
                   </Card.Text>
                   <div className="d-flex justify-content-between mt-3">
-            <Button variant="primary" onClick={() => handleEditComment(card.id)}>
+            <Button variant="primary" onClick={() => handleEditComment(card._id)}>
               Edit
             </Button>
-            <Button variant="primary" onClick={() => handleDeleteComment(card.id)}>
+            <Button variant="primary" onClick={() => handleDeleteComment(card._id)}>
               Delete
             </Button>
           </div>
