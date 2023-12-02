@@ -62,7 +62,7 @@ const Login = () => {
 
   return (
     <div className="pageBody">
-    <div className="card">
+    <div className="myCard">
       <div className="card-body">
         <h5 className="card-title">Login</h5>
         <form onSubmit={saveChanges}>
