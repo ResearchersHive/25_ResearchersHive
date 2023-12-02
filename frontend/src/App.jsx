@@ -8,6 +8,9 @@ import Scholar from './pages/scholar.jsx';
 import Landing from './pages/landing'
 import Search from './pages/search.jsx';
 import Paper from './pages/paper.jsx';
+import Dashboard from './pages/dashboard.jsx';
+import Profile from './pages/profile.jsx';
+
 
 
 function App() {
@@ -25,6 +28,8 @@ function App() {
             <Route path="/landing" element={<Landing />}></Route>
             <Route path="/search" element={<Search />}></Route>
             <Route path="/paper" element={<Paper />}></Route>
+            <Route path="/dashboard" element={<Dashboard />}></Route>
+            <Route path="/profile" element={<Profile />}></Route>
             <Route path="*" element={<Landing />}>
             </Route>
           </Routes>

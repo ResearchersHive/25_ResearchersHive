@@ -87,7 +87,7 @@ const Register = () => {
 
   return (
     <div className="pageBody" style={bodyStyle}>
-      <div className="card" style={cardStyle}>
+      <div className="myCard" style={cardStyle}>
         <div className="card-body">
           <h5 className="card-title">Registration Form</h5>
           <form onSubmit={saveChanges}>
