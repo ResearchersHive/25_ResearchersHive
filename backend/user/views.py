@@ -1,3 +1,4 @@
+import requests
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
@@ -67,3 +68,17 @@ def user_info(request):
         'profile': user.profile,
         'id': user.id,
     })
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def recommendations(request):
+    user = request.user
+    papers = user.papers.split(',') if user.papers else []
+    url = 'https://api.semanticscholar.org/recommendations/v1/papers/?fields=abstract,title&limit=5'
+    request = {
+        'positivePaperIds': papers,
+    }
+    response = requests.post(url, json=request, timeout=5)
+    if response.status_code == 200:
+        return Response(status=status.HTTP_200_OK, data=response.json()['recommendedPapers'])
+    return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={'error': 'Internal server error'})
