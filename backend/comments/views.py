@@ -25,12 +25,14 @@ def createComment(request):
              user=request.data.get('user')
              text=request.data.get('text')
              keyword=request.data.get('keyword')
+            
              #print(keyword)
              comment = CommentsCache(
              paper_id=paper_id,
              user=user,
              text=text,
              keyword=keyword,
+              paperTitle=paper_info
         )  
               
              comment.save()
@@ -43,6 +45,19 @@ def createComment(request):
 
             return Response({'success': 'Comment created successfully'}, status=status.HTTP_201_CREATED)
     return Response({'error': 'Only POST method is supported'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def get_all_paper(request):
+     if request.method == 'POST':
+       try:
+        print(request.body)
+        username=request.data.get('user')
+        comments = CommentsCache.objects.filter(user=username).values('_id', 'paper_id', 'text','paperTitle')
+        for c in range(len(comments)):
+            comments[c]['_id']=str(comments[c]['_id'])
+        return Response(comments, status=status.HTTP_200_OK)
+       except CommentsCache.DoesNotExist:
+           return Response({'error': f'User with username {username} does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 def get_comments_for_paper(request, paper_id):
@@ -75,17 +90,18 @@ def get_comments_for_paper(request, paper_id):
 def update_comment(request,comment_id):
     if request.method == 'PUT':
         try:
-            username=request.data.user('user')
-            comment = CommentsCache.objects.filter(_id=ObjectId(comment_id),user=username).values('_id', 'user', 'text','keyword')
+            print(request.body)
+            username=request.data.get('user')
+            print(username)
+            text=request.data.get('text')
+            CommentsCache.objects.filter(_id=ObjectId(comment_id),user=username).update(text=text)
+           
         except CommentsCache.DoesNotExist:
             return Response({'error': f'Comment with comment_id {comment_id} does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
         # Update the comment with the provided data
-        comment.user = request.data.get('user', comment.user)
-        comment.text = request.data.get('text', comment.text)
-        # Update other fields as needed
-
-        comment.save()
+        
+       
 
         return Response({'success': 'Comment updated successfully'}, status=status.HTTP_200_OK)
 

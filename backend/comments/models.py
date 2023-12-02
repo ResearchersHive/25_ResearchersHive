@@ -11,6 +11,7 @@ class CommentsCache(models.Model):
     user = models.CharField(max_length=255)
     text = models.TextField()
     keyword=models.CharField(max_length=255)
+    paperTitle = models.CharField(max_length=255)
     
 
     class Meta:
