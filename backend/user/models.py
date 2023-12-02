@@ -6,6 +6,7 @@ class User(AbstractUser):
     email = models.EmailField(max_length=254, unique=True)
     profile = models.CharField(max_length=10,default="scholar")
     created_at = models.DateTimeField(default=timezone.now)
+    papers = models.CharField(max_length=1000,default="")
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

@@ -62,7 +62,7 @@ const Login = () => {
 
   return (
     <div className="pageBody">
-    <div className="card">
+    <div className="myCard">
       <div className="card-body">
         <h5 className="card-title">Login</h5>
         <form onSubmit={saveChanges}>
@@ -97,8 +97,8 @@ const Login = () => {
         </form>
       </div>
     </div>
-    <div id="myModal" className="modal">
-      <div className="modal-content">
+    <div id="myModal" className="modal-1">
+      <div className="modal-1-content">
         <p id="modalPara"></p>
       </div>
     </div>

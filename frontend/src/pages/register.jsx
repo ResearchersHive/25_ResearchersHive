@@ -87,7 +87,7 @@ const Register = () => {
 
   return (
     <div className="pageBody" style={bodyStyle}>
-      <div className="card" style={cardStyle}>
+      <div className="myCard" style={cardStyle}>
         <div className="card-body">
           <h5 className="card-title">Registration Form</h5>
           <form onSubmit={saveChanges}>
@@ -175,8 +175,8 @@ const Register = () => {
           </form>
         </div>
       </div>
-      <div id="myModal" className="modal">
-        <div className="modal-content">
+      <div id="myModal" className="modal-1">
+        <div className="modal-1-content">
           <p id="modalPara">Successfully Registered!</p>
         </div>
       </div>

@@ -1,5 +1,5 @@
 
-.modal {
+.modal-1 {
     /* display: none; */
     position: fixed;
     padding-left: 550px;
@@ -13,7 +13,7 @@
     padding-top: 2px;
   }
   
-  .modal-content {
+  .modal-1-content {
     background-color: #9ee468;
     font-size: 1.7em;
     text-align: center;

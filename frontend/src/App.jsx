@@ -5,7 +5,12 @@ import Register from './pages/register.jsx';
 import Login from './pages/login.jsx';
 import Author from './pages/author.jsx';
 import Scholar from './pages/scholar.jsx';
-import Landing from './pages/landing'
+import Landing from './pages/landing';
+import Paper from './pages/paper.jsx';
+import Dashboard from './pages/dashboard.jsx';
+import Profile from './pages/profile.jsx';
+import Graph from './pages/graph.jsx';
+
 
 function App() {
   return (
@@ -19,9 +24,12 @@ function App() {
             </Route>
             <Route path="/author" element={<Author />}></Route>
             <Route path="/scholar" element={<Scholar />}></Route>
-            <Route path="/landing" element={<Landing />}>
+            <Route path="/landing" element={<Landing />}></Route>
+            <Route path="/paper" element={<Paper />}></Route>
+            <Route path="/dashboard" element={<Dashboard />}></Route>
+            <Route path="/profile" element={<Profile />}></Route>
+            <Route path="/graph" element={<Graph initialPaperId="649def34f8be52c8b66281af98ae884c09aef38b" />}></Route>
             <Route path="*" element={<Landing />}>
-            </Route>
             </Route>
           </Routes>
         </div>
