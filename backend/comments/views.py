@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
 from django.shortcuts import get_object_or_404
+from bson import ObjectId
 
 from comments.models import CommentsCache
 from paperInfo.models import PaperInfo
@@ -13,22 +14,25 @@ from paperInfo.models import PaperInfo
 def createComment(request):
     if request.method == 'POST':
        
-            print(request.body)
-            print(request.data.get('paper_id'))
+           # print(request.body)
+           # print(request.data.get('paper_id'))
             #return Response({'success': 'Comment created successfully'}, status=status.HTTP_201_CREATED)
             paper_id = request.data.get('paper_id')
 # print(paper_id,"Hi")
             #try:
             paper_info = PaperInfo.objects.get(paperId=paper_id)
-            #print({paper_info})
+           # print({paper_info})
             
             if paper_info:
              user=request.data.get('user')
              text=request.data.get('text')
+             keyword=request.data.get('keyword')
+             #print(keyword)
              comment = CommentsCache(
-             papername=paper_id,
+             paper_id=paper_id,
              user=user,
              text=text,
+             keyword=keyword,
         )  
               
              comment.save()
@@ -50,7 +54,7 @@ def get_comments_for_paper(request, paper_id):
         print(pid)
         paper_info = get_object_or_404(PaperInfo, paperId=pid)
         print(paper_info)
-        comments = CommentsCache.objects.filter(papername=pid).values('comment_id', 'user', 'text')  # Add other fields as needed
+        comments = CommentsCache.objects.filter(paper_id=pid).values('comment_id', 'user', 'text')  # Add other fields as needed
 
         return Response(comments, status=status.HTTP_200_OK)
        except PaperInfo.DoesNotExist:
@@ -64,7 +68,7 @@ def get_comments_for_paper(request, paper_id):
 def update_comment(request,comment_id):
     if request.method == 'PUT':
         try:
-            comment = CommentsCache.objects.get(comment_id=comment_id)
+            comment = CommentsCache.objects.get(_id=ObjectId(comment_id))
         except CommentsCache.DoesNotExist:
             return Response({'error': f'Comment with comment_id {comment_id} does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -83,7 +87,9 @@ def update_comment(request,comment_id):
 def delete_comment(request, comment_id):
     if request.method == 'DELETE':
         try:
-            comment = CommentsCache.objects.get(comment_id=comment_id)
+            
+            comment = CommentsCache.objects.get(_id=ObjectId(comment_id))
+            print(comment)
         except CommentsCache.DoesNotExist:
             return Response({'error': f'Comment with comment_id {comment_id} does not exist'}, status=status.HTTP_404_NOT_FOUND)
 

@@ -6,11 +6,12 @@ from user.models import User
 
 
 class CommentsCache(models.Model):
-    papername = models.CharField(max_length=255)
-    comment_id = models.AutoField(primary_key=True)
+    paper_id = models.CharField(max_length=255)
+    _id = models.ObjectIdField(primary_key=True) 
     user = models.CharField(max_length=255)
     text = models.TextField()
+    keyword=models.CharField(max_length=255)
     
 
     class Meta:
-        db_table = 'comment_db'
+        db_table = 'comment_paper_db'
