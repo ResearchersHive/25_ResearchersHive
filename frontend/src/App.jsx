@@ -7,6 +7,7 @@ import Author from './pages/author.jsx';
 import Scholar from './pages/scholar.jsx';
 import Landing from './pages/landing'
 import Search from './pages/search.jsx';
+import Paper from './pages/paper.jsx';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path="/scholar" element={<Scholar />}></Route>
             <Route path="/landing" element={<Landing />}></Route>
             <Route path="/search" element={<Search />}></Route>
+            <Route path="/paper" element={<Paper />}></Route>
             <Route path="*" element={<Landing />}>
             </Route>
           </Routes>
