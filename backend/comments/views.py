@@ -1,28 +1,26 @@
 from django.shortcuts import render
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.request import Request
 from django.shortcuts import get_object_or_404
 from bson import ObjectId
+from rest_framework.permissions import IsAuthenticated
 
 from comments.models import CommentsCache
 from paperInfo.models import PaperInfo
 
 # Create your views here.
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def createComment(request):
     if request.method == 'POST':
-       
-           # print(request.body)
-           # print(request.data.get('paper_id'))
-            #return Response({'success': 'Comment created successfully'}, status=status.HTTP_201_CREATED)
             paper_id = request.data.get('paper_id')
-# print(paper_id,"Hi")
-            #try:
             paper_info = PaperInfo.objects.get(paperId=paper_id)
-           # print({paper_info})
-            
+            comments = CommentsCache.objects.filter(paper_id=paper_id,user=request.user.username).values('_id', 'user', 'text','keyword')
+            if comments:
+                return Response({'error': f'Comment Already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
             if paper_info:
              user=request.data.get('user')
              text=request.data.get('text')
