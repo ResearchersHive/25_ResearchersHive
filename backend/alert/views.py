@@ -10,9 +10,10 @@ from paperInfo.models import PaperInfo
 @api_view(['POST'])
 def alert_api(request):
     current_keyword = request.data.get('keywords').split(',')
+    user=request.data.get('user')
     print(current_keyword)
     # Retrieve comments from the entire database
-    all_keywords = CommentsCache.objects.all()
+    all_keywords = CommentsCache.objects.filter(user=user)
     print(all_keywords.query)
     # Create a list to store papers with matching keywords
     matching_papers = []
