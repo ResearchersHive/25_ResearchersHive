@@ -7,6 +7,7 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth import get_user_model
 from .serializers import *
 from paperInfo.utils import paperInfo
+from comments.utils import commentInfo
 
 @api_view(['POST'])
 def user_creation(request):
@@ -33,13 +34,14 @@ def addPaper(request, id, paper_id):
 
     papers = user.papers.split(',') if user.papers else []
     paper_id_str = str(paper_id)
-    print("4321")
-    print(papers)
-    print(paper_id_str)
     paper_Info = paperInfo(paper_id_str)
     if "error" in paper_Info:
         return Response({"error": f"Paper Id : {paper_id} is incorrect"}, status=status.HTTP_400_BAD_REQUEST)
     print(paper_Info)
+    commentInf = commentInfo(paper_id_str, user.username)
+    if commentInf and commentInf[0].get('error') is None:
+        paper_Info["comment"] = commentInf[0]["text"]
+        paper_Info["keywords"] = commentInf[0]["keyword"]
     if paper_id not in papers:
         papers.append(paper_id_str)
         user.papers = ','.join(papers)

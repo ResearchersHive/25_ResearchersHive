@@ -35,6 +35,10 @@ const Paper = () => {
       setAbstract(response.abstract);
       setTerms(response.keywords.split(","));
       setPaperUrl(response.paperPdf);
+      if ("comment" in response) {
+        setComment(response.comment);
+      }
+      
     });
   }, []);
   return (
