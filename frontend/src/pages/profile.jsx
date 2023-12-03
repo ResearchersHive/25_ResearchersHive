@@ -56,33 +56,39 @@ const Profile  = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-
-        const data = [
-          {
-            id: 1,
-            title: 'Paper 1',
-            description: 'Abstract......',
-            link: 'http://localhost:5173/paper',
-          },
-          {
-            id: 2,
-            title: 'Paper 2',
-            description: 'Abstract......',
-            link: 'http://localhost:5173/paper',
-          },
-          {
-            id: 3,
-            title: 'Paper 3',
-            description: 'Abstract......',
-            link: 'http://localhost:5173/paper',
-          },
-          {
-            id: 4,
-            title: 'Paper 4',
-            description: 'Abstract......',
-            link: 'http://localhost:5173/paper',
-          }
-        ];
+        const id = localStorage.getItem("id")
+        const token = localStorage.getItem("token");
+        const response = await fetch(`http://127.0.0.1:8000/api/user/${id}/papers`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        
+        const data1 = await response.json();
+        
+        await console.log(data1)
+        if (data1["message"] == "Papers : ") {
+          const data2 = [
+            {
+              id: 1,
+              title: 'Start Reading...',
+              description: 'Enjoy your journey......',
+              link: 'http://localhost:5173/dashboard',
+            }
+          ]
+          setPaperData(data2);
+          return;
+        }
+        // const data = []
+        
+        const data = Object.keys(data1).map( (d)=> ({
+            id : d,
+            title : data1[d][0],
+            description : data1[d][1].substring(9),
+            link : "http://localhost:5173/paper/" + d 
+        }))
+        setPaperData(data);
         const commentResponse = await fetch('http://127.0.0.1:8000/api/comments/getAllComment/',{
           method: 'POST', // or 'POST' or any other HTTP method your API expects
           headers: {
@@ -97,13 +103,12 @@ const Profile  = () => {
         });
         const commentData = await commentResponse.json();
         console.log(commentData)
-        setPaperData(data);
         setCommentData(commentData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
+        
     fetchData();
   }, []);
 
@@ -185,7 +190,7 @@ const Profile  = () => {
           </Col>
         </Row>
     </Container>
-      <Container fluid>
+    <Container fluid>
         <h2 style={{margin:'20px'}}>Recently Read By You:</h2>
         <Row>
           {paperData.map((card) => (
