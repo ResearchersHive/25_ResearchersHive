@@ -39,31 +39,48 @@ def paperInfo(id):
                 data = response.json()
                 print(data)
                 keywords = []
-                keywords = extract_keywords(data['abstract'])
+                keywordGenerationText = data['abstract'] if data['abstract'] else data['title']
+                print(keywordGenerationText)
+                keywords = extract_keywords(keywordGenerationText)
                 print("Keywords:", keywords)
 
                 author_names = ''
+                # print("--------------------------------------------------")
                 for author in data['authors']:
                     author_names += author['name'] + ', '
+                
+                abstract = data['abstract'] if data['abstract'] else ""
+                tldr = data['tldr']['text'] if data['tldr'] and data['tldr']['text'] else ""
+                # print("-_-_---------", abstract)
+                # print("__________", tldr)
                 paper_info = {
-                    'paperId': data['paperId'],
-                    'title': data['title'],
-                    'abstract': data['abstract'] + "\n. It means : " + data['tldr']['text'],
-                    'year': data['year'],
-                    'authors': ', '.join(author['name'] for author in data['authors']),
-                    'keywords':', '.join(keyword for keyword in keywords),
-                    'paperPdf': "https://arxiv.org/pdf/" + data['externalIds']['ArXiv'] + ".pdf" if 'ArXiv' in data['externalIds'] else f"https://sci-hub.se/{data['externalIds']['DOI']}" if 'DOI' in data['externalIds'] else None,
-                    # 'authors':author_names,
-                    'venue': data['venue'],
-                    'venue_type': data['publicationVenue']['type'],
-                    'venue_link': data['publicationVenue']['url'],
-                }
+    'paperId': data['paperId'],
+    'title': data['title'],
+    'abstract': abstract + "\n " + tldr,
+    'year': data['year'] if data['year'] else '',
+    'authors': ', '.join(author['name'] for author in data['authors']),
+    'keywords': ','.join(keyword for keyword in keywords),
+    'paperPdf': (
+        "https://arxiv.org/pdf/" + data['externalIds']['ArXiv'] + ".pdf"
+        if 'ArXiv' in data['externalIds'] else
+        f"https://sci-hub.se/{data['externalIds']['DOI']}" if 'DOI' in data['externalIds'] else ""
+    ) or "",
+    'venue': data['venue'] if data['venue'] else "",
+    'venue_type': data['publicationVenue']['type'] if data['venue'] else "conference",
+    'venue_link': data['publicationVenue']['url'] if data['venue'] else "/",
+}
+                # print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+                # print("paperPdf:", paper_info['paperPdf'])
+                # print("venue:", paper_info['venue'])
+                # print("venue_link:", paper_info['venue_link'])
+                # print("--------------------------------------------------")
                 serializer = PaperInfoSerializer(data=paper_info)
                 if serializer.is_valid():
                     serializer.save()
                 else:
                     data = {'error': f'Invalid data: {serializer.errors}'}
                     return data
+                # print("-**************-------------------------------------")
                     
             except requests.exceptions.RequestException as e:
                 data = {'error': f'Error fetching data: {e}'}
