@@ -10,7 +10,7 @@ import { ButtonGroup } from "react-bootstrap";
 
 // const Profile  = ({ username }) => {
 const Profile  = () => {
-  const username = "Username"
+  const username = localStorage.getItem("username")
   const [term, setTerm] = useState({});
   const [paperData, setPaperData] = useState([]);
   const [commentData, setCommentData] = useState([]);
