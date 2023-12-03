@@ -42,28 +42,59 @@ const Dashboard = () => {
   //     link: 'http://localhost:5173/paper',
   //   },
   // ];
-  
+  const handleLinkClick = (event) => {
+    event.preventDefault();
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const response = await fetch("ourApiEndPoint");
-        // const data = await response.json();
-
-        const data = [
-          {
-            id: 1,
-            title: 'Paper 1',
-            description: 'Abstract......',
-            link: 'http://localhost:5173/paper',
-          },
-          {
-            id: 2,
-            title: 'Paper 2',
-            description: 'Abstract......',
-            link: 'http://localhost:5173/paper',
-          },
-        ];
+        const id = localStorage.getItem("id")
+        const token = localStorage.getItem("token");
+        const response = await fetch(`http://127.0.0.1:8000/api/user/${id}/papers`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        
+        const data1 = await response.json();
+        
+        await console.log(data1)
+        if (data1["message"] == "Papers : ") {
+          const data2 = [
+            {
+              id: 1,
+              title: 'Start Reading...',
+              description: 'Enjoy your journey......',
+              link: 'http://localhost:5173/dashboard',
+            }
+          ]
+          setPaperData(data2);
+          return;
+        }
+        // const data = []
+        
+        const data = Object.keys(data1).map( (d)=> ({
+            id : d,
+            title : data1[d][0],
+            description : data1[d][1].substring(9),
+            link : "http://localhost:5173/paper/" + d 
+        }))
+        // const data = [
+        //   {
+        //     id: 1,
+        //     title: 'Paper 1',
+        //     description: 'Abstract......',
+        //     link: 'http://localhost:5173/paper',
+        //   },
+        //   {
+        //     id: 2,
+        //     title: 'Paper 2',
+        //     description: 'Abstract......',
+        //     link: 'http://localhost:5173/paper',
+        //   },
+        // ];
 
         setPaperData(data);
       } catch (error) {
@@ -108,26 +139,6 @@ const Dashboard = () => {
         </Row>
       </Container>
       <Container fluid>
-        <h2 style={{margin:'20px'}}>Recently Read By You:</h2>
-        <Row>
-          {paperData.map((card) => (
-            <Col key={card.id} sm={12} md={6} lg={2}>
-              <Card style={{ width: '15rem', margin: '10px' }}>
-                <Card.Body>
-                  <Card.Title>{card.title}</Card.Title>
-                  <Card.Text style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {card.description}
-                  </Card.Text>
-                  <Card.Link href={card.link} target="_blank">
-                    Continue Reading...
-                  </Card.Link>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </Container>
-      <Container fluid>
         <h2 style={{margin:'20px'}}>Recommended For You:</h2>
         <Row>
           {recommendations.map((card) => (
@@ -138,9 +149,8 @@ const Dashboard = () => {
                   <Card.Text style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {card.description}
                   </Card.Text>
-                  <Card.Link href={card.link} target="_blank">
-                    Continue Reading...
-                  </Card.Link>
+                  <a href={card.link} target="_self" >Continue Reading...</a>
+
                 </Card.Body>
               </Card>
             </Col>
