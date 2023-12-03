@@ -26,7 +26,7 @@ def ai_rewrite(request):
         palm.configure(api_key=palm_api_key)
         completion = palm.generate_text(
             model='models/text-bison-001',
-            prompt="You're helping a researcher rewrite a comment they've written about a paper. Rewrite the following comment in a clear and concise way: " + request.data['text'],
+            prompt="You're helping a researcher rewrite a comment they've written about a paper. Rewrite the following comment in a clear and concise points using markdown bullets: " + request.data['text'],
             max_output_tokens=200
         )
         return Response(status=status.HTTP_200_OK, data={'rewritten_text': completion.result})
