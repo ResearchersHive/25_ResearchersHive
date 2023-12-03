@@ -53,7 +53,7 @@ def get_all_paper(request):
        try:
         print(request.body)
         username=request.data.get('user')
-        comments = CommentsCache.objects.filter(user=username).values('_id', 'paper_id', 'text','paperTitle')
+        comments = CommentsCache.objects.filter(user=username).values('_id', 'paper_id', 'text','paperTitle', 'keyword')
         for c in range(len(comments)):
             comments[c]['_id']=str(comments[c]['_id'])
         return Response(comments, status=status.HTTP_200_OK)

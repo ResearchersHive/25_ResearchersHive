@@ -73,7 +73,7 @@ const Dashboard = () => {
 
       <Container fluid className="mb-5">
         <h2 style={{margin:'20px'}}>Recently read by you:</h2>
-        <Row>
+        <Row className="mx-2">
           {paperData.map((card) => (
             <Col key={card.id} sm={12} md={6} lg={3} xxl={2}>
               <Card style={{ height: "100%" }}>
@@ -93,7 +93,7 @@ const Dashboard = () => {
       </Container>
       <Container fluid>
         <h2 style={{margin:'20px'}}>Recommended for you:</h2>
-        <Row>
+        <Row className="mx-2">
           {recommendations.map((card) => (
             <Col key={card.id} sm={12} md={6} lg={3} xxl={2}>
               <Card style={{ height: "100%"  }}>
@@ -112,7 +112,7 @@ const Dashboard = () => {
       </Container>
       <Container fluid>
         <h2 style={{margin:'20px'}}>Conferences:</h2>
-        <Table responsive>
+        <Table responsive className="mx-2">
           <thead>
             <tr>
               <th style={{backgroundColor:"#011638", color:"#FCBA50"}}>#</th>

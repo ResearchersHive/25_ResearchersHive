@@ -28,7 +28,8 @@ const Profile  = () => {
     try {
       CommentsApi.update(comment._id, {
         user: localStorage.getItem("username"),
-        text: comment.text
+        text: comment.text,
+        keyword: comment.keyword,
       }).then(() => {
         const updatedComments = commentData.map((c) =>
           c._id === comment._id ? { ...c, text: comment.text } : c
