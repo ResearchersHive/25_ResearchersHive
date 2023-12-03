@@ -99,6 +99,8 @@ def user_info(request):
 def recommendations(request):
     user = request.user
     papers = user.papers.split(',') if user.papers else []
+    if not papers:
+        return Response(status=status.HTTP_200_OK, data=[])
     url = 'https://api.semanticscholar.org/recommendations/v1/papers/?fields=abstract,title&limit=5'
     request = {
         'positivePaperIds': papers,
