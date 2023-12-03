@@ -7,6 +7,7 @@ class User(AbstractUser):
     profile = models.CharField(max_length=10,default="scholar")
     created_at = models.DateTimeField(default=timezone.now)
     papers = models.CharField(max_length=1000,default="")
+    papersAccessTime = models.JSONField(default=dict)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

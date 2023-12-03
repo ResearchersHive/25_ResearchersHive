@@ -13,6 +13,9 @@ import Card from 'react-bootstrap/Card';
 
 const Landing = () => {
     const navigate = useNavigate();
+    const handleRegisterClick = () => {
+        navigate('/register');
+      };
     return (
         <div className="landing-container">
             <CustomNavbar />
@@ -85,7 +88,7 @@ const Landing = () => {
                 </div>
             </Container>
             <div className="center-div">
-        <Button variant="primary">Register</Button>
+        <Button variant="primary" onClick={handleRegisterClick}>Register</Button>
       </div>
         </div>
     );

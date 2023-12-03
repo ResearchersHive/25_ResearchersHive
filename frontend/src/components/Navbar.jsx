@@ -1,10 +1,35 @@
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import SelectSearch from "react-select-search";
+import { useEffect, useRef } from "react";
+
+import './search.css';
+import { SearchApi } from "../utils/requests";
 
 const CustomNavbar = () => {
+  const getOptions = (query) => {
+    if (!query) {
+      return Promise.resolve([]);
+    }
+    return new Promise((resolve, reject) => {
+      SearchApi.search(query).then(({ matches }) => {
+        resolve(matches.map(({ id, title }) => ({ value: id, name: title })));
+      }).catch(reject);
+    });
+  };
+
+  const ssRef = useRef();
+
+  // useEffect(() => {
+  //   ssRef.current.addEventListener('focus', () => {
+  //     console.log('focus');
+  //   });
+  // }, []);
+
+  const onChange = (id) => {
+    window.location.href = `/paper/${id}`;
+  };
   return (
     <header>
       <Navbar expand="lg" className="bg-body-tertiary">
@@ -18,15 +43,9 @@ const CustomNavbar = () => {
             >
               <Nav.Link href="#action1">Home</Nav.Link>
             </Nav>
-            <Form className="d-flex">
-              <Form.Control
-                type="search"
-                placeholder="Search"
-                className="me-2"
-                aria-label="Search"
-              />
-              <Button variant="outline-success">Search</Button>
-            </Form>
+            <Nav>
+            <SelectSearch ref={ssRef} getOptions={getOptions} debounce={1000} onChange={onChange} autoComplete="on" search />
+            </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>

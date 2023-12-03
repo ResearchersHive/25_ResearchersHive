@@ -4,8 +4,12 @@ import Badge from "react-bootstrap/Badge";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { UserApi } from "../utils/requests";
+import AiRewrite from "../components/AiRewrite";
 
 const Paper = () => {
+  const { id } = useParams();
   const [paperName, setPaperName] = useState("");
   const [venueType, setVenueType] = useState("");
   const [venueName, setVenueName] = useState("");
@@ -22,32 +26,82 @@ const Paper = () => {
   const handleShow = () => setShow(true);
 
   useEffect(() => {
-    setPaperName("Construction of the Literature Graph in Semantic Scholar");
-    setVenueType("conference");
-    setVenueName(
-      `North American Chapter of the Association for Computational Linguistics`
-    );
-    setVenueLink("https://www.aclweb.org/portal/naacl");
-    setAuthors(
-      "Waleed Ammar, Dirk Groeneveld, Chandra Bhagavatula, Iz Beltagy, Miles Crawford, Doug Downey, Jason Dunkelberger, Ahmed Elgohary, Sergey Feldman, Vu A. Ha, Rodney Michael Kinney, Sebastian Kohlmeier, Kyle Lo, Tyler C. Murray, Hsu-Han Ooi, Matthew E. Peters, Joanna L. Power, Sam Skjonsberg, Lucy Lu Wang, Christopher Wilhelm, Zheng Yuan, Madeleine van Zuylen, Oren Etzioni"
-    );
-    setAbstract(`
-        We describe a deployed scalable system for organizing published
-        scientific literature into a heterogeneous graph to facilitate
-        algorithmic manipulation and discovery. The resulting literature
-        graph consists of more than 280M nodes, representing papers,
-        authors, entities and various interactions between them (e.g.,
-        authorships, citations, entity mentions). We reduce literature
-        graph construction into familiar NLP tasks (e.g., entity
-        extraction and linking), point out research challenges due to
-        differences from standard formulations of these tasks, and report
-        empirical results for each task. The methods described in this
-        paper are used to enable semantic features in
-        www.semanticscholar.org.`);
-    setTerms(["literature", "graph", "entity", "describe", "system"]);
-    setPaperUrl("https://arxiv.org/pdf/1805.02262.pdf");
-    setComment("Hello, World!");
+    UserApi.getPaper(id).then((response) => {
+      console.log(response);
+      setPaperName(response.title);
+      setVenueType(response.venue_type);
+      setVenueName(response.venue_name);
+      setVenueLink(response.venue_link);
+      setAuthors(response.authors);
+      setAbstract(response.abstract);
+      setTerms(response.keywords.split(","));
+      setPaperUrl(response.paperPdf);
+      if ("comment" in response) {
+        setComment(response.comment);
+      }
+      
+    });
+
+    
   }, []);
+
+  useEffect(()=>{
+    const callAlert=async ()=>{
+      try {
+        // Replace 'your-alert-api-endpoint' with the actual endpoint
+        const response = await fetch('http://127.0.0.1:8000/api/alert/getalert', {
+          method: 'POST', // or 'GET' or any other HTTP method
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user: localStorage.getItem("username"),
+            keyword:terms.join(','),  // Replace with the actual user id
+          }),
+        });
+
+        if (response.ok) {
+          console.log('Alert API called successfully');
+        } else {
+          console.error('Failed to call Alert API');
+        }
+      } catch (error) {
+        console.error('Error calling Alert API:', error);
+      }
+    };
+
+    callAlert();
+  },[terms]);
+ const addComment = async(id,terms) => {
+   
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch('http://127.0.0.1:8000/api/comments/create/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+         Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        paper_id:id,
+        user: localStorage.getItem("username"),
+        text:comment,
+        keyword:terms.join(','),  // Replace with the actual user id
+      }),
+    });
+    if (response.ok) {
+      console.log('Comment added successfully');
+      alert('Comment added successfully');
+      // You can update the UI or perform any other actions after a successful comment submission
+    } else {
+      console.error('Failed to add comment');
+      alert('Failed to add comment. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    alert('An error occurred while adding the comment. Please try again.');
+  }
+};
   return (
     <>
       <CustomNavbar />
@@ -130,21 +184,14 @@ const Paper = () => {
             <Form>
               <Form.Group className="mb-3" controlId="commentsTextarea">
                 <Form.Label>Enter comments</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={3}
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                />
+                <AiRewrite comment={comment} setComment={setComment} />
               </Form.Group>
-              <Button variant="primary" style={{ marginRight: "10px" }}>
+              <Button variant="primary" style={{ marginRight: "10px" }} onClick={() => addComment(id,terms)}>
                 Add Comment
               </Button>
               <Button
                 variant="primary"
-                onClick={() => {
-                  setComment("");
-                }}
+               // onClick={() => handleEditComment(card._id)}
               >
                 Clear
               </Button>

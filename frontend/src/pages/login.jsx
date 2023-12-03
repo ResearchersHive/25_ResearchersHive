@@ -35,16 +35,24 @@ const Login = () => {
             console.log("Login Successful!");
             console.log(response.data)
             localStorage.setItem("token", response.data.access);
-            setTimeout(() => {
-              modal.style.display = "none";
-              
-              if (response.data.profile === "scholar") {
-                navigate('/scholar');
-              } else {
-                navigate('/author');
-              }
-            }, 2000);
-
+            fetch("http://localhost:8000/api/user/info", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${response.data.access}`,
+              },
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                console.log(data);
+                localStorage.setItem("id", data.id);
+                localStorage.setItem("username", data.username);
+              })
+              .then(() => {
+                setTimeout(() => {
+                  navigate('/dashboard');
+                }, 2000);
+              });
           }
       } catch (error) {
         console.error("Error:", error);

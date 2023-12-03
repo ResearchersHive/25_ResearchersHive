@@ -9,9 +9,11 @@ stopWords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you',
 nlp = spacy.load("en_core_web_sm")
 
 def paperInfo(id):
+    print(id)
     if id:
         paper_id = id
         paper = PaperInfo.get_paper_by_id(paper_id)
+        print(id)
         if paper != None :
             print("From DB")
             paper_info = {
@@ -31,11 +33,11 @@ def paperInfo(id):
         else :
             print("From API")
             url = f'https://api.semanticscholar.org/graph/v1/paper/{paper_id}?fields=title,abstract,year,authors,venue,publicationVenue,tldr,externalIds'
-
             try:
                 response = requests.get(url, timeout=5)
                 response.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx)
                 data = response.json()
+                print(data)
                 keywords = []
                 keywords = extract_keywords(data['abstract'])
                 print("Keywords:", keywords)
@@ -50,7 +52,7 @@ def paperInfo(id):
                     'year': data['year'],
                     'authors': ', '.join(author['name'] for author in data['authors']),
                     'keywords':', '.join(keyword for keyword in keywords),
-                    'paperPdf': "https://arxiv.org/pdf/" + data['externalIds']['ArXiv'] + ".pdf",
+                    'paperPdf': "https://arxiv.org/pdf/" + data['externalIds']['ArXiv'] + ".pdf" if 'ArXiv' in data['externalIds'] else f"https://sci-hub.se/{data['externalIds']['DOI']}" if 'DOI' in data['externalIds'] else None,
                     # 'authors':author_names,
                     'venue': data['venue'],
                     'venue_type': data['publicationVenue']['type'],

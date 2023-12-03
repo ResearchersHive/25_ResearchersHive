@@ -40,6 +40,7 @@ def references(request: Request) -> Response:
                 try:
                     references = get_paper_references(paper_id)
                     references = [dataclasses.asdict(reference) for reference in references]
+                    PaperReferencesCache.objects.create(paper_id=paper_id, references=references)
                     return Response(status=status.HTTP_200_OK, data=references)
                 except Exception as e:
                     print(e)
@@ -59,6 +60,7 @@ def citations(request: Request) -> Response:
                 try:
                     citations = get_paper_citations(paper_id)
                     citations = [dataclasses.asdict(citation) for citation in citations]
+                    PaperCitationsCache.objects.create(paper_id=paper_id, citations=citations)
                     return Response(status=status.HTTP_200_OK, data=citations)
                 except Exception:
                     return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={'error': 'Internal server error'})
@@ -77,6 +79,7 @@ def recommendations(request: Request) -> Response:
                 try:
                     recommendations = get_recommendations(paper_id)
                     recommendations = [dataclasses.asdict(recommendation) for recommendation in recommendations]
+                    PaperRecommendationsCache.objects.create(paper_id=paper_id, recommendations=recommendations)
                     return Response(status=status.HTTP_200_OK, data=recommendations)
                 except Exception:
                     return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={'error': 'Internal server error'})
@@ -92,11 +95,10 @@ def author_papers(request: Request) -> Response:
                 author_papers = AuthorPapersCache.objects.get(author_id=author_id)
                 return Response(status=status.HTTP_200_OK, data=author_papers.papers)
             except AuthorPapersCache.DoesNotExist:
-                try:
-                    papers = get_author_papers(author_id)
-                    papers = [dataclasses.asdict(paper) for paper in papers]
-                    return Response(status=status.HTTP_200_OK, data=papers)
-                except Exception:
-                    return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={'error': 'Internal server error'})
+                print('does not exist')
+                papers = get_author_papers(author_id)
+                papers = [dataclasses.asdict(paper) for paper in papers]
+                AuthorPapersCache.objects.create(author_id=author_id, papers=papers)
+                return Response(status=status.HTTP_200_OK, data=papers)
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'error': 'id is required'})
     return Response(status=status.HTTP_400_BAD_REQUEST, data={'error': 'only GET method is supported'})
