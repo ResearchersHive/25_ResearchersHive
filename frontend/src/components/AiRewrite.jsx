@@ -29,6 +29,7 @@ const AiRewrite = ({ comment, setComment }) => {
           setButtonContent(<Spinner animation="grow" size="sm" />);
           FeaturesApi.aiRewrite(comment).then((res) => {
             setComment(res.rewritten_text);
+            editorRef.current.getInstance().setMarkdown(res.rewritten_text);
             setButtonContent("✨");
           }).catch((err) => {
             console.log(err);

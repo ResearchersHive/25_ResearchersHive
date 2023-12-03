@@ -111,7 +111,7 @@ DATABASES = {
 
 SIMPLE_JWT = {
     "USER_ID_FIELD": "email",
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),  # Adjust this as needed
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=5),  # Adjust this as needed
 }
 
 # Password validation
