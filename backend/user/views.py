@@ -26,10 +26,10 @@ def user_creation(request):
         return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def addPaper(request, id, paper_id):
-    # if id != request.user.id:
-    #     return Response({"error": "You are not allowed to add paper to this account"}, status=status.HTTP_400_BAD_REQUEST)
+    if id != request.user.id:
+        return Response({"error": "You are not allowed to add paper to this account"}, status=status.HTTP_400_BAD_REQUEST)
     try:
         user = User.objects.get(id=id)
     except User.DoesNotExist:
@@ -38,6 +38,7 @@ def addPaper(request, id, paper_id):
 
     paper_id_str = str(paper_id)
     paper_Info = paperInfo(paper_id_str)
+    print(paper_Info)
     if "error" in paper_Info:
         return Response({"error": f"Paper Id : {paper_id} is incorrect"}, status=status.HTTP_400_BAD_REQUEST)
     print(paper_Info)
@@ -59,8 +60,8 @@ def addPaper(request, id, paper_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def showPapers(request, id):
-    print("----------",len(str(id)))
-    print("----------",len(str(request.user.id)))
+    # print("----------",len(str(id)))
+    # print("----------",len(str(request.user.id)))
 
     if str(id) != str(request.user.id):
         return Response({"error": "You are not allowed to add paper to this account"}, status=status.HTTP_400_BAD_REQUEST)

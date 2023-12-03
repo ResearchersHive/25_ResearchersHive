@@ -9,7 +9,7 @@ from paperInfo.models import PaperInfo
 
 @api_view(['POST'])
 def alert_api(request):
-   # print(request.body)
+    print(request.body)
     current_keyword = request.data.get('keyword').split(',')
 
     user=request.data.get('user')

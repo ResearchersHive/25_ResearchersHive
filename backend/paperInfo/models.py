@@ -7,10 +7,10 @@ class PaperInfo(models.Model):
     keywords = models.CharField(max_length=255, default="")
     paperPdf = models.CharField(max_length=255, default="")
     year = models.PositiveIntegerField()
-    authors = models.CharField(max_length=511)
-    venue = models.CharField(max_length=255)
+    authors = models.CharField(max_length=1022)
+    venue = models.CharField(max_length=255, default="")
     venue_type = models.CharField(max_length=50, choices=[('conference', 'Conference'), ('journal', 'Journal')])
-    venue_link = models.URLField()
+    venue_link = models.URLField(default="")
 
     def __str__(self):
         return self.title
