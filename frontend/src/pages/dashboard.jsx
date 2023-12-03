@@ -17,16 +17,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const id = localStorage.getItem("id")
-        const token = localStorage.getItem("token");
-        const response = await fetch(`http://127.0.0.1:8000/api/user/${id}/papers`, {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-        
-        const data1 = await response.json();
+        const data1 = await UserApi.getPapers();
         
         await console.log(data1)
         if (data1["message"] == "Papers : ") {

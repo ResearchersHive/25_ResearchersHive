@@ -21,12 +21,6 @@ const CustomNavbar = () => {
 
   const ssRef = useRef();
 
-  // useEffect(() => {
-  //   ssRef.current.addEventListener('focus', () => {
-  //     console.log('focus');
-  //   });
-  // }, []);
-
   const onChange = (id) => {
     window.location.href = `/paper/${id}`;
   };
@@ -41,7 +35,8 @@ const CustomNavbar = () => {
               className="me-auto my-2 my-lg-0"
               style={{ maxHeight: "100px" }}
             >
-              <Nav.Link href="#action1">Home</Nav.Link>
+              <Nav.Link href="/dashboard">Dashboard</Nav.Link>
+              <Nav.Link href="/profile">Profile</Nav.Link>
             </Nav>
             <Nav>
             <SelectSearch ref={ssRef} getOptions={getOptions} debounce={1000} onChange={onChange} autoComplete="on" search />
