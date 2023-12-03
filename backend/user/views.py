@@ -9,6 +9,8 @@ from django.contrib.auth import get_user_model
 from .serializers import *
 from paperInfo.utils import paperInfo
 from comments.utils import commentInfo
+from datetime import datetime
+
 
 @api_view(['POST'])
 def user_creation(request):
@@ -24,16 +26,16 @@ def user_creation(request):
         return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def addPaper(request, id, paper_id):
-    if id != request.user.id:
-        return Response({"error": "You are not allowed to add paper to this account"}, status=status.HTTP_400_BAD_REQUEST)
+    # if id != request.user.id:
+    #     return Response({"error": "You are not allowed to add paper to this account"}, status=status.HTTP_400_BAD_REQUEST)
     try:
         user = User.objects.get(id=id)
     except User.DoesNotExist:
         return Response({"error": "User doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
-
     papers = user.papers.split(',') if user.papers else []
+
     paper_id_str = str(paper_id)
     paper_Info = paperInfo(paper_id_str)
     if "error" in paper_Info:
@@ -43,22 +45,43 @@ def addPaper(request, id, paper_id):
     if commentInf and commentInf[0].get('error') is None:
         paper_Info["comment"] = commentInf[0]["text"]
         paper_Info["keywords"] = commentInf[0]["keyword"]
+
+    
     if paper_id not in papers:
         papers.append(paper_id_str)
         user.papers = ','.join(papers)
-        user.save()
+    if user.papersAccessTime is None:
+        user.papersAccessTime = {}
+    user.papersAccessTime[paper_id_str] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    user.save()
     return Response(status=status.HTTP_200_OK, data=paper_Info)
     
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def showPapers(request, id):
-    print("----------",id)
+    print("----------",len(str(id)))
+    print("----------",len(str(request.user.id)))
+
+    if str(id) != str(request.user.id):
+        return Response({"error": "You are not allowed to add paper to this account"}, status=status.HTTP_400_BAD_REQUEST)
+    # print("----------",id)
     try:
         user = User.objects.get(id=id)
     except User.DoesNotExist:
         return Response({"error": "User doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
 
-    papers = user.papers.split(',') if user.papers else []
-    return Response({"message": f"Papers : {user.papers}"}, status=status.HTTP_200_OK)
+    papersAT = user.papersAccessTime
+    last_5_access_times =  dict(sorted(papersAT.items(), key=lambda item: item[1], reverse=True)[:5]) if papersAT else {}
+    print(last_5_access_times)
+    listOfPaper = {}
+
+    for paper in last_5_access_times.keys():
+        paper_Info = paperInfo(paper)
+        listOfPaper[paper] = [paper_Info["title"], paper_Info["abstract"]]
+    if listOfPaper :
+        return Response(listOfPaper, status=status.HTTP_200_OK)
+    else :
+        return Response({"message": f"Papers : "}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
