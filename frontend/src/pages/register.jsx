@@ -3,6 +3,7 @@ import axios from "axios";
 import "./register.css";
 import { useNavigate } from "react-router-dom";
 import { UserApi } from "../utils/requests";
+import swal from 'sweetalert';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -41,24 +42,13 @@ const Register = () => {
     e.preventDefault();
     try {
       UserApi.register(formData).then(() => {
-        const modal = document.getElementById("myModal");
-        const modalP = document.getElementById("modalPara");
-        modalP.innerHTML = "Successfully Registered";
-        modal.style.display = "block";
+        swal('Success', 'Registered successfully!', 'success');
         setTimeout(() => {
-          modal.style.display = "none";
           navigate("/login");
         }, 2000);
       }).catch((error) => {
-        console.error("Error:", error);
-        const modal = document.getElementById("myModal");
-        const modalP = document.getElementById("modalPara");
-        modalP.innerHTML = error.detail;
-        modal.style.display = "block";
-        setTimeout(() => {
-          modal.style.display = "none";
-          navigate("/login");
-        }, 6000);
+        console.log('Error:', error);
+        swal('Error', error.message, 'error');
       });
     } catch (error) {
       console.error("Error:", error);
@@ -86,7 +76,7 @@ const Register = () => {
   return (
     <div className="pageBody" style={bodyStyle}>
       <div className="myCard" style={cardStyle}>
-        <div className="card-body">
+        <div className="card-body" style={{ padding: "20px" }}>
           <h5 className="card-title">Registration Form</h5>
           <form onSubmit={saveChanges}>
             <div className="mb-3">
@@ -171,11 +161,6 @@ const Register = () => {
               <p>Already have an Account</p>
             </a>
           </form>
-        </div>
-      </div>
-      <div id="myModal" className="modal-1">
-        <div className="modal-1-content">
-          <p id="modalPara">Successfully Registered!</p>
         </div>
       </div>
     </div>

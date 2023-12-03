@@ -7,6 +7,8 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { AlertApi, CommentsApi, UserApi } from "../utils/requests";
 import AiRewrite from "../components/AiRewrite";
+import swal from 'sweetalert';
+
 
 const Paper = () => {
   const { id } = useParams();
@@ -58,8 +60,8 @@ const Paper = () => {
 
   useEffect(()=>{
     try {
-      AlertApi.getAlert({user: localStorage.getItem("username"), keyword:terms.join(',')}).then(matchingPapers => {
-        alert("Matching Papers Found: " + JSON.stringify(matchingPapers));
+      AlertApi.getAlert({user: localStorage.getItem("username"), keyword:terms.join(','), paperId: id}).then(matchingPapers => {
+        swal("Matching Papers Found: " + JSON.stringify(matchingPapers));
         console.log('Alert API called successfully');
       }).catch(error => {
         console.log('Error calling Alert API:', error);
@@ -67,7 +69,7 @@ const Paper = () => {
     } catch (error) {
       console.error('Error calling Alert API:', error);
     }
-  }, []);
+  }, [terms]);
  const addComment = async(id) => {
    
   if (hasComment) {
@@ -77,9 +79,9 @@ const Paper = () => {
       text: comment,
       keyword: terms.join(','),
     }).then(() => {
-      alert('Comment updated successfully.')
+      swal('Comment updated successfully.')
     }).catch(() => {
-      alert('Failed to update comment. Please try again.');
+      swal('Failed to update comment. Please try again.');
     });
   } else {
     CommentsApi.create({
@@ -88,9 +90,9 @@ const Paper = () => {
       text: comment,
       keyword: terms.join(','),
     }).then(() => {
-      alert('Comment added successfully.')
+      swal('Comment added successfully.')
     }).catch(() => {
-      alert('Failed to add comment. Please try again.');
+      swal('Failed to add comment. Please try again.');
     });
   }
 };
@@ -147,12 +149,12 @@ const Paper = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Container fluid>
+      <Container fluid style={{ backgroundColor: "#E8E8E8", color: "#011638" }}>
         <Row style={{ margin: "10px" }}>
           <Col style={{ maxHeight: "calc(100vh - 100px)", overflow: "scroll" }}>
             <h1 className="mt-3">{paperName}</h1>
             <Button variant="outline-secondary" style={{ float: "right" }}>
-              <a style={{textDecoration: 'none'}} target="_blank" href={`http://localhost:5173/graph/${id}`} rel="noreferrer">
+              <a style={{textDecoration: 'none', color: '#011638'}} target="_blank" href={`http://localhost:5173/graph/${id}`} rel="noreferrer">
                 Visualize 🕸️
               </a>
             </Button>
@@ -180,7 +182,6 @@ const Paper = () => {
             <h3 className="mt-3">Comments</h3>
             <Form>
               <Form.Group className="mb-3" controlId="commentsTextarea">
-                <Form.Label>Enter comments</Form.Label>
                 <AiRewrite ref={editorRef} comment={comment} setComment={setComment} />
               </Form.Group>
               <Button variant="primary" style={{ marginRight: "10px" }} onClick={() => addComment(id)}>

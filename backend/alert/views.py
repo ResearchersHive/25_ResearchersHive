@@ -20,6 +20,7 @@ def alert_api(request):
     # Create a list to store papers with matching keywords
     matching_papers = []
     for key in all_keywords:
+        print('key.keyword', key.keyword)
         comment_keyword=key.keyword.split(',')
         print("Database keyword",comment_keyword)
         matched_keywords=list(set(current_keyword).intersection(set(comment_keyword)))
@@ -29,7 +30,8 @@ def alert_api(request):
            # print("Inside")
             title=key.paperTitle
            # print(title)
-            matching_papers.append(title)
+            if key.paper_id != request.data.get('paperId'):
+                matching_papers.append(title)
             #print({paper_info})
     #print(matching_papers) 
      

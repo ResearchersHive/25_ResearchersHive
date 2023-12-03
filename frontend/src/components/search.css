@@ -1,5 +1,9 @@
 @import url('https://rsms.me/inter/inter.css');
 
+nav {
+    background-color: #011638 !important;
+}
+
 .search {
     position: absolute;
     top: 50%;

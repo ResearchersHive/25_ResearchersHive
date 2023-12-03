@@ -20,6 +20,7 @@
     "react-router-dom": "^6.17.0",
     "react-select-search": "^4.1.7",
     "react-sizeme": "^3.0.2",
+    "sweetalert": "^2.1.2",
     "universal-cookie": "^6.1.1"
   },
   "devDependencies": {

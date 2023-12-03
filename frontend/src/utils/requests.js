@@ -167,11 +167,11 @@ export class FeaturesApi {
 }
 
 export class AlertApi {
-  static getAlert({ user, keyword }) {
+  static getAlert({ user, keyword, paperId }) {
     return performJsonRequest(
       `${alertApi}/getalert`,
       "POST",
-      { user: user, keyword: keyword },
+      { user: user, keyword: keyword, paperId: paperId },
       true
     );
   }

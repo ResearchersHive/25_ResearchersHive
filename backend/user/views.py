@@ -17,7 +17,7 @@ def user_creation(request):
     data = request.data
     if not data.get('username') or not data.get('password') or not data.get('email') :
         return Response({"message": "Please provide all the details"}, status=status.HTTP_400_BAD_REQUEST)
-    userExist = User.objects.filter(username=data.get('username')).exists()
+    userExist = User.objects.filter(username=data.get('username'))
 
     if userExist:
         return Response({"message": "User already exists"}, status=status.HTTP_400_BAD_REQUEST)
