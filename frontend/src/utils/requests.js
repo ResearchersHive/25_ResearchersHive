@@ -1,6 +1,7 @@
 const graphApi = "http://localhost:8000/api/graph";
 const searchApi = "http://localhost:8000/api/search";
 const userApi = "http://localhost:8000/api/user";
+const featuresApi = "http://localhost:8000/api/features";
 
 export class GraphApi {
   static getDetails(paperId) {
@@ -73,4 +74,28 @@ export class UserApi {
       },
     }).then((response) => response.json());
   }
+}
+
+export class FeaturesApi {
+    static aiRewrite(text) {
+        const token = localStorage.getItem("token");
+        return fetch(`${featuresApi}/ai/rewrite`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({text: text})
+        }).then((response) => response.json());
+    }
+
+    static conferences() {
+        const token = localStorage.getItem("token");
+        return fetch(`${featuresApi}/conferences`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        }).then((response) => response.json());
+    }
 }
