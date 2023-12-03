@@ -40,7 +40,67 @@ const Paper = () => {
       }
       
     });
+
+    
   }, []);
+
+  useEffect(()=>{
+    const callAlert=async ()=>{
+      try {
+        // Replace 'your-alert-api-endpoint' with the actual endpoint
+        const response = await fetch('http://127.0.0.1:8000/api/alert/getalert', {
+          method: 'POST', // or 'GET' or any other HTTP method
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user: localStorage.getItem("username"),
+            keyword:terms.join(','),  // Replace with the actual user id
+          }),
+        });
+
+        if (response.ok) {
+          console.log('Alert API called successfully');
+        } else {
+          console.error('Failed to call Alert API');
+        }
+      } catch (error) {
+        console.error('Error calling Alert API:', error);
+      }
+    };
+
+    callAlert();
+  },[terms]);
+ const addComment = async(id,terms) => {
+   
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch('http://127.0.0.1:8000/api/comments/create/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+         Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        paper_id:id,
+        user: localStorage.getItem("username"),
+        text:comment,
+        keyword:terms.join(','),  // Replace with the actual user id
+      }),
+    });
+    if (response.ok) {
+      console.log('Comment added successfully');
+      alert('Comment added successfully');
+      // You can update the UI or perform any other actions after a successful comment submission
+    } else {
+      console.error('Failed to add comment');
+      alert('Failed to add comment. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    alert('An error occurred while adding the comment. Please try again.');
+  }
+};
   return (
     <>
       <CustomNavbar />
@@ -130,14 +190,12 @@ const Paper = () => {
                   onChange={(e) => setComment(e.target.value)}
                 />
               </Form.Group>
-              <Button variant="primary" style={{ marginRight: "10px" }}>
+              <Button variant="primary" style={{ marginRight: "10px" }} onClick={() => addComment(id,terms)}>
                 Add Comment
               </Button>
               <Button
                 variant="primary"
-                onClick={() => {
-                  setComment("");
-                }}
+               // onClick={() => handleEditComment(card._id)}
               >
                 Clear
               </Button>

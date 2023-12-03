@@ -46,6 +46,7 @@ const Login = () => {
               .then((data) => {
                 console.log(data);
                 localStorage.setItem("id", data.id);
+                localStorage.setItem("username", data.username);
               })
               .then(() => {
                 setTimeout(() => {
