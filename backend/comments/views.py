@@ -15,20 +15,22 @@ from paperInfo.models import PaperInfo
 @permission_classes([IsAuthenticated])
 def createComment(request):
     if request.method == 'POST':
+          #  print("18")
             paper_id = request.data.get('paper_id')
             paper_info = PaperInfo.objects.get(paperId=paper_id)
             comments = CommentsCache.objects.filter(paper_id=paper_id,user=request.user.username).values('_id', 'user', 'text','keyword')
-            if comments:
+            
+            if comments and comments.text:
                 return Response({'error': f'Comment Already exists'}, status=status.HTTP_400_BAD_REQUEST)
-
+            
             if paper_info:
              user=request.data.get('user')
              text=request.data.get('text')
              keyword=request.data.get('keyword')
-            
+             print("30")
              #print(keyword)
              comment = CommentsCache(
-             paper_id=paper_id,
+                paper_id=paper_id,
              user=user,
              text=text,
              keyword=keyword,
@@ -37,8 +39,7 @@ def createComment(request):
               
              comment.save()
             else:
-           # except PaperInfo.DoesNotExist:
-              return Response({'error': f'PaperInfo with paper_id {paper_id} does not exist'}, status=status.HTTP_404_NOT_FOUND)
+                return Response({'error': f'PaperInfo with paper_id {paper_id} does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
         # Create and save the Comment object directly
             

@@ -28,15 +28,16 @@ const Profile  = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user:'Abd',
+          user:localStorage.getItem("username"),
           text: comment.description, // Assuming 'text' is the field you want to update
         }),
       });
       console.log(comment)
       if (response.ok) {
         const updatedComments = commentData.map((c) =>
-          c._id === comment._id ? { ...c, text: comment.text } : c
+          c._id === comment._id ? { ...c, text: comment.description } : c
         );
+        console.log(updatedComments)
         setCommentData(updatedComments);
         setShow(false); // Close the modal after successful update
   
@@ -97,7 +98,7 @@ const Profile  = () => {
           },
           // Include the userid in the request body
           body: JSON.stringify({
-            user: 'Abd', // Replace with the actual user id
+            user: localStorage.getItem("username"), // Replace with the actual user id
           }),
         
         });

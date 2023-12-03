@@ -61,6 +61,9 @@ const Paper = () => {
         });
 
         if (response.ok) {
+          //console.log(response);
+          const matchingPapers = await response.json();;
+          alert("Matching Papers Found: " + JSON.stringify(matchingPapers));
           console.log('Alert API called successfully');
         } else {
           console.error('Failed to call Alert API');
@@ -71,7 +74,7 @@ const Paper = () => {
     };
 
     callAlert();
-  },[terms]);
+  },[paperName]);
  const addComment = async(id,terms) => {
    
   try {
