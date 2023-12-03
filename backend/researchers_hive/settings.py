@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,7 +40,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'user',
+    'search',
+    'paperInfo',
+    'graph',
+    'comments',
+    'features',
+    'alert',
+    'corsheaders',
+    'rest_framework_simplejwt'
 ]
+
+AUTH_USER_MODEL = "user.User"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -47,8 +60,14 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:5173',  # Add your frontend origin here
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'researchers_hive.urls'
 
@@ -68,6 +87,12 @@ TEMPLATES = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
 WSGI_APPLICATION = 'researchers_hive.wsgi.application'
 
 
@@ -76,9 +101,17 @@ WSGI_APPLICATION = 'researchers_hive.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'NAME': 'ResearchersHive',
+        'CLIENT': {
+            'host' : 'mongodb://localhost:27017',
+        }  
     }
+}
+
+SIMPLE_JWT = {
+    "USER_ID_FIELD": "email",
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=5),  # Adjust this as needed
 }
 
 # Password validation
@@ -121,3 +154,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# AUTHENTICATION_BACKENDS = [
+#     'django.contrib.auth.backends.ModelBackend',
+# ]
