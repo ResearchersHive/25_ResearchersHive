@@ -2,6 +2,7 @@ import { useState } from 'react';
 import "./login.css"
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { UserApi } from '../utils/requests';
 
 
 const Login = () => {
@@ -22,27 +23,15 @@ const Login = () => {
   const saveChanges = async (e) => {
     e.preventDefault();
     try{
-      const response = await axios.post(
-        "http://localhost:8000/api/user/login",
-        formData
-      );
-          console.log(response)
-          if(response.status === 200){
+        UserApi.login(formData).then((data) => {
             const modal = document.getElementById("myModal");
             const modalP = document.getElementById("modalPara");
             modalP.innerHTML = "Successfully Logged In!";
             modal.style.display = "block";
             console.log("Login Successful!");
-            console.log(response.data)
-            localStorage.setItem("token", response.data.access);
-            fetch("http://localhost:8000/api/user/info", {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${response.data.access}`,
-              },
-            })
-              .then((res) => res.json())
+            console.log(data)
+            localStorage.setItem("token", data.access);
+            UserApi.info()
               .then((data) => {
                 console.log(data);
                 localStorage.setItem("id", data.id);
@@ -53,7 +42,7 @@ const Login = () => {
                   navigate('/dashboard');
                 }, 2000);
               });
-          }
+            });
       } catch (error) {
         console.error("Error:", error);
         const modal = document.getElementById("myModal");

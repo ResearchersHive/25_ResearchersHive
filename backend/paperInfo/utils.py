@@ -66,8 +66,8 @@ def paperInfo(id):
         f"https://sci-hub.se/{data['externalIds']['DOI']}" if 'DOI' in data['externalIds'] else ""
     ) or "",
     'venue': data['venue'] if data['venue'] else "",
-    'venue_type': data['publicationVenue']['type'] if data['venue'] else "conference",
-    'venue_link': data['publicationVenue']['url'] if data['venue'] else "/",
+    'venue_type': data['publicationVenue']['type'] if data['publicationVenue'] else "conference",
+    'venue_link': data['publicationVenue']['url'] if data['publicationVenue'] else "/",
 }
                 # print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
                 # print("paperPdf:", paper_info['paperPdf'])

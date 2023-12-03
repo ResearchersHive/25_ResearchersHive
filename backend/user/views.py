@@ -45,6 +45,7 @@ def addPaper(request, id, paper_id):
     commentInf = commentInfo(paper_id_str, user.username)
     if commentInf and commentInf[0].get('error') is None:
         paper_Info["comment"] = commentInf[0]["text"]
+        paper_Info['comment_id'] = commentInf[0]["_id"]
         paper_Info["keywords"] = commentInf[0]["keyword"]
 
     

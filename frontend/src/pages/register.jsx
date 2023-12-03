@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import "./register.css";
 import { useNavigate } from "react-router-dom";
+import { UserApi } from "../utils/requests";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -39,10 +40,7 @@ const Register = () => {
   const saveChanges = async (e) => {
     e.preventDefault();
     try {
-      const result = await axios.post(
-        "http://localhost:8000/api/user/register",
-        formData
-      );
+      const result = await UserApi.register(formData);
       if (result.status === 201) {
         const modal = document.getElementById("myModal");
         const modalP = document.getElementById("modalPara");

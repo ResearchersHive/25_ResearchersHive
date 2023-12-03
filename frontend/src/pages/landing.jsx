@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import CustomNavbar from "../components/Navbar";
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
@@ -18,7 +17,6 @@ const Landing = () => {
       };
     return (
         <div className="landing-container">
-            <CustomNavbar />
             <Container className="main-content">
                 <Row className="info">
                 <Col xs={12} lg={6}>

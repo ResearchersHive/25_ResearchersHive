@@ -1,15 +1,14 @@
 /* eslint-disable react/prop-types */
 import Button from "react-bootstrap/Button";
 import Spinner from 'react-bootstrap/Spinner';
-import { useState, useRef } from "react";
+import { useState, forwardRef } from "react";
 import { FeaturesApi } from "../utils/requests";
 import '@toast-ui/editor/dist/toastui-editor.css';
 
 import { Editor } from '@toast-ui/react-editor';
 
-const AiRewrite = ({ comment, setComment }) => {
+const AiRewrite = forwardRef(function AiRewrite({ comment, setComment }, ref) {
   const [buttonContent, setButtonContent] = useState("✨");
-  const editorRef = useRef();
 
   return (
     <div style={{ position: "relative" }}>
@@ -18,9 +17,9 @@ const AiRewrite = ({ comment, setComment }) => {
         initialEditType="wysiwyg"
         initialValue={comment}
         onChange={() => {
-          setComment(editorRef.current.getInstance().getMarkdown());
+          setComment(ref.current.getInstance().getMarkdown());
         }}
-        ref={editorRef}
+        ref={ref}
       />
       <Button
         variant="secondary"
@@ -29,7 +28,7 @@ const AiRewrite = ({ comment, setComment }) => {
           setButtonContent(<Spinner animation="grow" size="sm" />);
           FeaturesApi.aiRewrite(comment).then((res) => {
             setComment(res.rewritten_text);
-            editorRef.current.getInstance().setMarkdown(res.rewritten_text);
+            ref.current.getInstance().setMarkdown(res.rewritten_text);
             setButtonContent("✨");
           }).catch((err) => {
             console.log(err);
@@ -41,6 +40,6 @@ const AiRewrite = ({ comment, setComment }) => {
       </Button>
     </div>
   );
-};
+});
 
 export default AiRewrite;

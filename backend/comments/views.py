@@ -95,7 +95,8 @@ def update_comment(request,comment_id):
             username=request.data.get('user')
             print(username)
             text=request.data.get('text')
-            CommentsCache.objects.filter(_id=ObjectId(comment_id),user=username).update(text=text)
+            keyword=request.data.get('keyword')
+            CommentsCache.objects.filter(_id=ObjectId(comment_id),user=username).update(text=text,keyword=keyword)
            
         except CommentsCache.DoesNotExist:
             return Response({'error': f'Comment with comment_id {comment_id} does not exist'}, status=status.HTTP_404_NOT_FOUND)

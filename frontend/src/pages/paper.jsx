@@ -3,9 +3,9 @@ import CustomNavbar from "../components/Navbar";
 import Badge from "react-bootstrap/Badge";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { UserApi } from "../utils/requests";
+import { AlertApi, CommentsApi, UserApi } from "../utils/requests";
 import AiRewrite from "../components/AiRewrite";
 
 const Paper = () => {
@@ -19,6 +19,15 @@ const Paper = () => {
   const [terms, setTerms] = useState([]);
   const [paperUrl, setPaperUrl] = useState("");
   const [comment, setComment] = useState("");
+  const [commentId, setCommentId] = useState("");
+  const [hasComment, setHasComment] = useState(false);
+
+  const editorRef = useRef();
+
+  const updateComment = (updatedComment) => {
+    setComment(updatedComment);
+    editorRef.current.getInstance().setMarkdown(updatedComment);
+  }
 
   const [show, setShow] = useState(false);
 
@@ -37,7 +46,9 @@ const Paper = () => {
       setTerms(response.keywords.split(","));
       setPaperUrl(response.paperPdf);
       if ("comment" in response) {
-        setComment(response.comment);
+        updateComment(response.comment);
+        setHasComment(true);
+        setCommentId(response.comment_id);
       }
       
     });
@@ -46,63 +57,41 @@ const Paper = () => {
   }, []);
 
   useEffect(()=>{
-    const callAlert=async ()=>{
-      try {
-        // Replace 'your-alert-api-endpoint' with the actual endpoint
-        const response = await fetch('http://127.0.0.1:8000/api/alert/getalert', {
-          method: 'POST', // or 'GET' or any other HTTP method
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            user: localStorage.getItem("username"),
-            keyword:terms.join(','),  // Replace with the actual user id
-          }),
-        });
-
-        if (response.ok) {
-          //console.log(response);
-          const matchingPapers = await response.json();;
-          alert("Matching Papers Found: " + JSON.stringify(matchingPapers));
-          console.log('Alert API called successfully');
-        } else {
-          console.error('Failed to call Alert API');
-        }
-      } catch (error) {
-        console.error('Error calling Alert API:', error);
-      }
-    };
-
-    callAlert();
-  },[paperName]);
- const addComment = async(id,terms) => {
-   
-  try {
-    const token = localStorage.getItem("token");
-    const response = await fetch('http://127.0.0.1:8000/api/comments/create/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-         Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        paper_id:id,
-        user: localStorage.getItem("username"),
-        text:comment,
-        keyword:terms.join(','),  // Replace with the actual user id
-      }),
-    });
-    if (response.ok) {
-      console.log('Comment added successfully');
-      alert('Comment added successfully');
-      // You can update the UI or perform any other actions after a successful comment submission
-    } else {
-      console.error('Failed to add comment');
-      alert('Failed to add comment. Please try again.');
+    try {
+      AlertApi.getAlert({user: localStorage.getItem("username"), keyword:terms.join(',')}).then(matchingPapers => {
+        alert("Matching Papers Found: " + JSON.stringify(matchingPapers));
+        console.log('Alert API called successfully');
+      }).catch(error => {
+        console.log('Error calling Alert API:', error);
+      });
+    } catch (error) {
+      console.error('Error calling Alert API:', error);
     }
-  } catch (error) {
-    console.error('Error adding comment:', error);
-    alert('An error occurred while adding the comment. Please try again.');
+  }, []);
+ const addComment = async(id) => {
+   
+  if (hasComment) {
+    CommentsApi.update(commentId, {
+      paper_id: id,
+      user: localStorage.getItem('username'),
+      text: comment,
+      keyword: terms.join(','),
+    }).then(() => {
+      alert('Comment updated successfully.')
+    }).catch(() => {
+      alert('Failed to update comment. Please try again.');
+    });
+  } else {
+    CommentsApi.create({
+      paper_id: id,
+      user: localStorage.getItem('username'),
+      text: comment,
+      keyword: terms.join(','),
+    }).then(() => {
+      alert('Comment added successfully.')
+    }).catch(() => {
+      alert('Failed to add comment. Please try again.');
+    });
   }
 };
   return (
@@ -162,6 +151,11 @@ const Paper = () => {
         <Row style={{ margin: "10px" }}>
           <Col style={{ maxHeight: "calc(100vh - 100px)", overflow: "scroll" }}>
             <h1 className="mt-3">{paperName}</h1>
+            <Button variant="outline-secondary" style={{ float: "right" }}>
+              <a style={{textDecoration: 'none'}} target="_blank" href={`http://localhost:5173/graph/${id}`} rel="noreferrer">
+                Visualize 🕸️
+              </a>
+            </Button>
             <div className="mt-3">
               <Badge bg="primary">{venueType}</Badge>
             </div>
@@ -187,14 +181,14 @@ const Paper = () => {
             <Form>
               <Form.Group className="mb-3" controlId="commentsTextarea">
                 <Form.Label>Enter comments</Form.Label>
-                <AiRewrite comment={comment} setComment={setComment} />
+                <AiRewrite ref={editorRef} comment={comment} setComment={setComment} />
               </Form.Group>
-              <Button variant="primary" style={{ marginRight: "10px" }} onClick={() => addComment(id,terms)}>
-                Add Comment
+              <Button variant="primary" style={{ marginRight: "10px" }} onClick={() => addComment(id)}>
+                {hasComment ? "Update Comment" : "Add Comment"}
               </Button>
               <Button
                 variant="primary"
-               // onClick={() => handleEditComment(card._id)}
+               onClick={() => updateComment("")}
               >
                 Clear
               </Button>
