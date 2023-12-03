@@ -15,10 +15,13 @@ from datetime import datetime
 @api_view(['POST'])
 def user_creation(request):
     data = request.data
+    # print("____________________________", data)
     if not data.get('username') or not data.get('password') or not data.get('email') :
         return Response({"message": "Please provide all the details"}, status=status.HTTP_400_BAD_REQUEST)
-    userExist = User.objects.filter(username=data.get('username')).exists()
-
+    # if not data.get('username') or not data.get('password') or not data.get('email') :
+    #     return Response({"message": "Please provide all the details"}, status=status.HTTP_400_BAD_REQUEST)
+    userExist = User.objects.filter(username=data.get('username'))
+    # print("--------------------------",userExist,"------------------------------")
     if userExist:
         return Response({"message": "User already exists"}, status=status.HTTP_400_BAD_REQUEST)
     else :
