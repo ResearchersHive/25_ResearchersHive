@@ -124,13 +124,14 @@ const CitationsGraph = ({ initialPaperId }) => {
         </Modal.Footer>
       </Modal>
       <SizeMe monitorHeight refreshRate={32}>
-        {({ size }) => (
+      {({ size }) => (
           <ForceGraph3D
             ref={fgRef}
             width={size.width}
             height={size.height}
             graphData={graphData}
-            nodeColor={(node) => (node.type === "paper" ? "#00f" : "#f00")}
+            nodeColor={(node) => (node.type === "paper" ? "#FCBA50" : "#f8f7f7")}
+            nodeAutoColorBy={(node) => node.type}
             onNodeClick={handleClick}
             onNodeRightClick={(node) => {
               console.log(node);
@@ -141,8 +142,9 @@ const CitationsGraph = ({ initialPaperId }) => {
                 handleShow();
               }
             }}
-            linkColor={() => "#000"}
-            backgroundColor="#fff"
+            linkColor={() => "#FCBA50"}
+            linkWidth={2}
+            backgroundColor="#011638"
           />
         )}
       </SizeMe>

@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 import './landing.css';
 import Card from 'react-bootstrap/Card';
+import landingImage from '../images/landing.jpeg';
 
 
 const Landing = () => {
@@ -32,7 +33,7 @@ const Landing = () => {
                     <Col xs={12} lg={6}>
                         <div className="info-image">
                         <Image
-                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/s1B6UkAAAAASUVORK5CYII="
+                            src={landingImage}
                             alt="Empty placeholder"
                             width={400}
                             height={300}

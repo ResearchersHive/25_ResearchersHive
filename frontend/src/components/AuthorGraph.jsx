@@ -175,7 +175,8 @@ const AuthorGraph = ({ initialPaperId }) => {
             width={size.width}
             height={size.height}
             graphData={graphData}
-            nodeColor={(node) => (node.type === "paper" ? "#00f" : "#f00")}
+            nodeColor={(node) => (node.type === "paper" ? "#FCBA50" : "#f8f7f7")}
+            nodeAutoColorBy={(node) => node.type}
             onNodeClick={handleClick}
             onNodeRightClick={(node) => {
               console.log(node);
@@ -186,8 +187,9 @@ const AuthorGraph = ({ initialPaperId }) => {
                 handleShow();
               }
             }}
-            linkColor={() => "#000"}
-            backgroundColor="#fff"
+            linkColor={() => "#FCBA50"}
+            linkWidth={2}
+            backgroundColor="#011638"
           />
         )}
       </SizeMe>

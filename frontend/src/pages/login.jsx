@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
 import { UserApi } from "../utils/requests";
+import swal from 'sweetalert';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -22,12 +23,7 @@ const Login = () => {
     e.preventDefault();
     UserApi.login(formData)
       .then((data) => {
-        const modal = document.getElementById("myModal");
-        const modalP = document.getElementById("modalPara");
-        modalP.innerHTML = "Successfully Logged In!";
-        modal.style.display = "block";
-        console.log("Login Successful!");
-        console.log(data);
+        swal('Success', 'Successfully Logged In', 'success');
         localStorage.setItem("token", data.access);
         UserApi.info()
           .then((data) => {
@@ -43,22 +39,16 @@ const Login = () => {
       })
       .catch(async (error) => {
         console.error("Error:", error);
-        const modal = document.getElementById("myModal");
-        const modalP = document.getElementById("modalPara");
-        modalP.innerHTML = "Unsuccessful Login : " + (await error).detail;
-        modal.style.display = "block";
+        swal('Error', error.detail, 'error');
         console.log("Login Unsuccessful");
-        setTimeout(() => {
-          modal.style.display = "none";
-        }, 2000);
       });
   };
 
   return (
     <div className="pageBody">
       <div className="myCard">
-        <div className="card-body">
-          <h5 className="card-title">Login</h5>
+        <div className="card-body" style={{ padding: "20px" }}>
+          <h3 className="card-title">Login</h3>
           <form onSubmit={saveChanges}>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
@@ -93,14 +83,9 @@ const Login = () => {
             </button>
             <p></p>
             <a href="http://localhost:5173/register">
-              <p>Create new Account</p>
+              <p>Create new account</p>
             </a>
           </form>
-        </div>
-      </div>
-      <div id="myModal" className="modal-1">
-        <div className="modal-1-content">
-          <p id="modalPara"></p>
         </div>
       </div>
     </div>

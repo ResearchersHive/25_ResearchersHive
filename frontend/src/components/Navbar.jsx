@@ -26,20 +26,20 @@ const CustomNavbar = () => {
   };
   return (
     <header>
-      <Navbar expand="lg" className="bg-body-tertiary">
+      <Navbar expand="lg" style={{ backgroundColor: "#011638 !important", color: "white" }}>
         <Container fluid>
-          <Navbar.Brand href="#">Researchers&rsquo; Hive</Navbar.Brand>
+          <Navbar.Brand  style={{ color: "#FCBA50" }} href="#">Researchers&rsquo; Hive</Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
             <Nav
               className="me-auto my-2 my-lg-0"
-              style={{ maxHeight: "100px" }}
+              style={{ maxHeight: "100px", color: "white" }}
             >
-              <Nav.Link href="/dashboard">Dashboard</Nav.Link>
-              <Nav.Link href="/profile">Profile</Nav.Link>
+              <Nav.Link style={{ color: "white" }} href="/dashboard">Dashboard</Nav.Link>
+              <Nav.Link style={{ color: "white" }} href="/profile">Profile</Nav.Link>
             </Nav>
             <Nav>
-            <SelectSearch ref={ssRef} getOptions={getOptions} debounce={1000} onChange={onChange} autoComplete="on" search />
+            <SelectSearch placeholder="Search" ref={ssRef} getOptions={getOptions} debounce={1000} onChange={onChange} autoComplete="on" search />
             </Nav>
           </Navbar.Collapse>
         </Container>

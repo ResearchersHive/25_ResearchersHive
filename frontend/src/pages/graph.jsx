@@ -15,11 +15,11 @@ const Graph = () => {
   return (
     <>
       <CustomNavbar />
-      <Container fluid style={{ height: "calc(100vh - 100px)" }} onContextMenu={(e) => e.preventDefault()}>
+      <Container fluid style={{ height: "calc(100vh - 100px)", padding: "20px" }} onContextMenu={(e) => e.preventDefault()}>
         <Tabs
           defaultActiveKey="author"
           onSelect={key => setGraphBy(key)}
-          style={{ maxHeight: "50px" }}
+          style={{ maxHeight: "50px", justifyContent: "center" }}
         >
           <Tab eventKey="author" title="Author"></Tab>
           <Tab eventKey="citation" title="Citation"></Tab>

@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import 'bootstrap/dist/css/bootstrap.min.css'
 
 import Register from './pages/register.jsx';
 import Login from './pages/login.jsx';

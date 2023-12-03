@@ -70,7 +70,7 @@ const Profile  = () => {
         const data = Object.keys(data1).map( (d)=> ({
             id : d,
             title : data1[d][0],
-            description : data1[d][1].substring(9),
+            description : data1[d][1],
             link : "http://localhost:5173/paper/" + d 
         }))
         setPaperData(data);
@@ -146,17 +146,17 @@ const Profile  = () => {
         </Row>
     </Container>
     <Container fluid>
-        <h2 style={{margin:'20px'}}>Recently Read By You:</h2>
-        <Row>
+        <h2 style={{margin:'20px'}}>Recently read by you:</h2>
+        <Row className="mx-2" style={{ margin: "-20px 0 0 0" }}>
           {paperData.map((card) => (
-            <Col key={card.id} sm={12} md={6} lg={2}>
-              <Card style={{ width: '15rem', margin: '10px' }}>
-                <Card.Body>
+            <Col style={{ marginTop: "20px" }}key={card.id} sm={12} md={6} lg={3} xxl={2}>
+              <Card style={{ height: "100%" }}>
+                <Card.Body style={{ display: 'flex', flexDirection: 'column' }}>
                   <Card.Title>{card.title}</Card.Title>
-                  <Card.Text style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <Card.Text className="card-description" style={{ flexGrow: 1 }}>
                     {card.description}
                   </Card.Text>
-                  <Card.Link href={card.link} target="_blank">
+                  <Card.Link style={{ textDecoration: 'none', }} href={card.link} target="_blank">
                     Continue Reading...
                   </Card.Link>
                 </Card.Body>
@@ -167,13 +167,13 @@ const Profile  = () => {
       </Container>
       <Container fluid>
         <h2 style={{margin:'20px'}}>Comments:</h2>
-        <Row>
+        <Row className="mx-2 mb-3">
           {commentData.map((card) => (
-            <Col key={card.id} sm={12} md={6} lg={2}>
-              <Card style={{ width: '15rem', margin: '10px' }}>
-                <Card.Body>
+            <Col key={card.id} sm={12} md={6} lg={3} xxl={2}>
+              <Card style={{ height: "100%"  }}>
+                <Card.Body style={{ display: 'flex', flexDirection: 'column' }}>
                   <Card.Title>{card.paperTitle}</Card.Title>
-                  <Card.Text style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <Card.Text className="card-description" style={{ flexGrow: 1 }}>
                     {card.text}
                   </Card.Text>
                   <div className="d-flex justify-content-between mt-3">
