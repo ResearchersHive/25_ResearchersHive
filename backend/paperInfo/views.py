@@ -57,7 +57,7 @@ def paperInfo(request):
                         'abstract': data['abstract'] + "\n. It means : " + data['tldr']['text'],
                         'year': data['year'],
                         'authors': ', '.join(author['name'] for author in data['authors']),
-                        'keywords':', '.join(keyword for keyword in keywords),
+                        'keywords':','.join(keyword for keyword in keywords),
                         'paperPdf': "https://arxiv.org/pdf/" + data['externalIds']['ArXiv'] + ".pdf",
                         # 'authors':author_names,
                         'venue': data['venue'],

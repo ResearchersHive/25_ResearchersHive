@@ -61,6 +61,9 @@ const Paper = () => {
         });
 
         if (response.ok) {
+          console.log(response);
+          const matchingPapers = response.data;
+          alert("Matching Papers Found: " + JSON.stringify(matchingPapers));
           console.log('Alert API called successfully');
         } else {
           console.error('Failed to call Alert API');

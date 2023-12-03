@@ -9,31 +9,33 @@ from paperInfo.models import PaperInfo
 
 @api_view(['POST'])
 def alert_api(request):
-    print(request.body)
-    current_keyword = request.data.get('keywords').split(',')
+   # print(request.body)
+    current_keyword = request.data.get('keyword').split(',')
 
     user=request.data.get('user')
-    print(current_keyword)
+    print("Current keyword",current_keyword)
     # Retrieve comments from the entire database
     all_keywords = CommentsCache.objects.filter(user=user)
-    print(all_keywords.query)
+    #print(all_keywords.query)
     # Create a list to store papers with matching keywords
     matching_papers = []
     for key in all_keywords:
         comment_keyword=key.keyword.split(',')
-        print(comment_keyword)
-        matched_keywords=set(current_keyword).intersection(set(comment_keyword))
+        print("Database keyword",comment_keyword)
+        matched_keywords=list(set(current_keyword).intersection(set(comment_keyword)))
+        #print(matched_keywords)
+       # print(key.paperTitle)
         if(len(matched_keywords)>=3):
-            title=PaperInfo.objects.get(paperId=key.paper_id)
-            matching_papers.append(title.title)
+           # print("Inside")
+            title=key.paperTitle
+           # print(title)
+            matching_papers.append(title)
             #print({paper_info})
-    #print(matching_papers)      
+    #print(matching_papers) 
+     
     if matching_papers:
-        alert_message = {
-            'alert': 'Matching keywords found in papers read by you',
-            'matching_comments': matching_papers,
-        }
-        #return Response({'success': 'Comment deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
-        return Response(alert_message)
-    return Response(status=status.HTTP_204_NO_CONTENT)
+        print(matching_papers) 
+        return Response(matching_papers,status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
