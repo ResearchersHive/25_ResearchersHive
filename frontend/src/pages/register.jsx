@@ -40,8 +40,7 @@ const Register = () => {
   const saveChanges = async (e) => {
     e.preventDefault();
     try {
-      const result = await UserApi.register(formData);
-      if (result.status === 201) {
+      UserApi.register(formData).then(() => {
         const modal = document.getElementById("myModal");
         const modalP = document.getElementById("modalPara");
         modalP.innerHTML = "Successfully Registered";
@@ -50,16 +49,17 @@ const Register = () => {
           modal.style.display = "none";
           navigate("/login");
         }, 2000);
-      } else if(result.status === 400) {
+      }).catch((error) => {
+        console.error("Error:", error);
         const modal = document.getElementById("myModal");
         const modalP = document.getElementById("modalPara");
-        modalP.innerHTML = result.data.message;
+        modalP.innerHTML = error.detail;
         modal.style.display = "block";
         setTimeout(() => {
           modal.style.display = "none";
           navigate("/login");
         }, 6000);
-      }
+      });
     } catch (error) {
       console.error("Error:", error);
     }
