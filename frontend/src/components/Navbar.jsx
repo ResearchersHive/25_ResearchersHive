@@ -2,6 +2,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import SelectSearch from "react-select-search";
+import { useEffect, useRef } from "react";
 
 import './search.css';
 import { SearchApi } from "../utils/requests";
@@ -17,6 +18,14 @@ const CustomNavbar = () => {
       }).catch(reject);
     });
   };
+
+  const ssRef = useRef();
+
+  // useEffect(() => {
+  //   ssRef.current.addEventListener('focus', () => {
+  //     console.log('focus');
+  //   });
+  // }, []);
 
   const onChange = (id) => {
     window.location.href = `/paper/${id}`;
@@ -35,7 +44,7 @@ const CustomNavbar = () => {
               <Nav.Link href="#action1">Home</Nav.Link>
             </Nav>
             <Nav>
-            <SelectSearch getOptions={getOptions} debounce={1000} onChange={onChange} autoComplete="on" search />
+            <SelectSearch ref={ssRef} getOptions={getOptions} debounce={1000} onChange={onChange} autoComplete="on" search />
             </Nav>
           </Navbar.Collapse>
         </Container>

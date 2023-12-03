@@ -6,6 +6,7 @@ import Modal from "react-bootstrap/Modal";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UserApi } from "../utils/requests";
+import AiRewrite from "../components/AiRewrite";
 
 const Paper = () => {
   const { id } = useParams();
@@ -183,12 +184,7 @@ const Paper = () => {
             <Form>
               <Form.Group className="mb-3" controlId="commentsTextarea">
                 <Form.Label>Enter comments</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={3}
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                />
+                <AiRewrite comment={comment} setComment={setComment} />
               </Form.Group>
               <Button variant="primary" style={{ marginRight: "10px" }} onClick={() => addComment(id,terms)}>
                 Add Comment

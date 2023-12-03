@@ -1,15 +1,14 @@
-import { Button, Col, Container, Row, Stack } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import CustomNavbar from "../components/Navbar";
-import Badge from "react-bootstrap/Badge";
-import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
 import { Card } from "react-bootstrap";
+import Table from "react-bootstrap/Table";
 import { useEffect, useState } from "react";
-import { UserApi } from "../utils/requests";
+import { FeaturesApi, UserApi } from "../utils/requests";
 
 const Dashboard = () => {
   const [paperData, setPaperData] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
+  const [conferences, setConferences] = useState([]);
   // const paperData = [
   //   {
   //     id: 1,
@@ -112,6 +111,15 @@ const Dashboard = () => {
       .catch((err) => {
         console.log(err);
       });
+
+    FeaturesApi.conferences()
+      .then((data) => {
+        console.log(data);
+        setConferences(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   return (
@@ -156,6 +164,31 @@ const Dashboard = () => {
             </Col>
           ))}
         </Row>
+      </Container>
+      <Container fluid>
+        <h2 style={{margin:'20px'}}>Conferences:</h2>
+        <Table responsive>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Conference Name</th>
+              <th>Deadline</th>
+              <th>Venue</th>
+              <th>Conference Link</th>
+            </tr>
+          </thead>
+          <tbody>
+            {conferences.map((conference, i) => (
+              <tr key={conference.conference_id}>
+                <td>{i + 1}</td>
+                <td>{conference.conference_name}</td>
+                <td>{conference.deadline}</td>
+                <td>{conference.venue}</td>
+                <td><a href={`http://www.wikicfp.com${conference.conference_link}`} rel="noreferrer" target="_blank">Link</a></td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
       </Container>
     </>
   );
