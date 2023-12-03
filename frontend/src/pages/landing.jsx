@@ -21,9 +21,8 @@ const Landing = () => {
                 <Row className="info">
                 <Col xs={12} lg={6}>
                 <div className="info-text">
-                            <h2 style={{ justifyContent: "center" }}>XYZ</h2>
-                            <Row xs={2} md={4} lg={6} fluid="false" className="justify-content-middle">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                            <h2 style={{ justifyContent: "center" }}>Researcher’s Hive</h2>
+                            <Row xs={2} md={4} lg={6} fluid="false" className="justify-content-middle">Researcher's Hive is a powerful research tool that helps you manage your research knowledge. With its intuitive interface and comprehensive features, we make it easy for you to find and organize research papers, capture your ideas and insights and get personalized recommendations.
                             </Row>
                             <br></br>
                             <br></br>
@@ -49,37 +48,33 @@ const Landing = () => {
                 <div style={{ display: 'flex', marginTop: '2%' }}>
                     <Card style={{ width: '22rem', marginLeft: '2%' }}>
                         <Card.Body>
-                            <Card.Title>Card Title</Card.Title>
+                            <Card.Title>New ways to Add Comments</Card.Title>
                             <Card.Text>
-                                Some quick example text to build on the card title and make up the
-                                bulk of the card's content.
+                            Elevate your research experience with our powerful commenting system. Go beyond simple text annotations and add visual elements like images and tables to enhance your understanding and communication. 
                             </Card.Text>
                         </Card.Body>
                     </Card>
                     <Card style={{ width: '22rem', marginLeft: '5%' }}>
                         <Card.Body>
-                            <Card.Title>Card Title</Card.Title>
+                            <Card.Title>Organize Your Research</Card.Title>
                             <Card.Text>
-                                Some quick example text to build on the card title and make up the
-                                bulk of the card's content.
+                            Store your papers, notes, and ideas in a way that makes sense to you. Researcher's Hive's flexible tagging system that alerts you when you view similar papers. This keeps you looking for more!
                             </Card.Text>
                         </Card.Body>
                     </Card>
                     <Card style={{ width: '22rem', marginLeft: '5%' }}>
                         <Card.Body>
-                            <Card.Title>Card Title</Card.Title>
+                            <Card.Title>Visualize Your Data</Card.Title>
                             <Card.Text>
-                                Some quick example text to build on the card title and make up the
-                                bulk of the card's content.
+                            See your research data in a whole new light with Researcher's Hive's interactive visualizations. Explore connections between papers, authors, track citations, and see the big picture of your research.
                             </Card.Text>
                         </Card.Body>
                     </Card>
                     <Card style={{ width: '22rem', marginLeft: '5%' }}>
                         <Card.Body>
-                            <Card.Title>Card Title</Card.Title>
+                            <Card.Title> Get Personalized Recommendations</Card.Title>
                             <Card.Text>
-                                Some quick example text to build on the card title and make up the
-                                bulk of the card's content.
+                            Our recommendation system learns from your research habits and interests to suggest papers that you're likely to find relevant and useful. 
                             </Card.Text>
                         </Card.Body>
                     </Card>
