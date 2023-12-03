@@ -9,38 +9,7 @@ const Dashboard = () => {
   const [paperData, setPaperData] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
   const [conferences, setConferences] = useState([]);
-  // const paperData = [
-  //   {
-  //     id: 1,
-  //     title: 'Paper 1',
-  //     description: 'AbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstractAbstract',
-  //     link: 'http://localhost:5173/paper',
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'Paper 2',
-  //     description: 'Abstract......',
-  //     link: 'http://localhost:5173/paper',
-  //   },
-  //   {
-  //     id: 3,
-  //     title: 'Paper 3',
-  //     description: 'Abstract......',
-  //     link: 'http://localhost:5173/paper',
-  //   },
-  //   {
-  //     id: 4,
-  //     title: 'Paper 4',
-  //     description: 'Abstract......',
-  //     link: 'http://localhost:5173/paper',
-  //   },
-  //   {
-  //     id: 5,
-  //     title: 'Paper 5',
-  //     description: 'Abstract......',
-  //     link: 'http://localhost:5173/paper',
-  //   },
-  // ];
+  
   const handleLinkClick = (event) => {
     event.preventDefault();
   };
@@ -80,21 +49,6 @@ const Dashboard = () => {
             description : data1[d][1].substring(9),
             link : "http://localhost:5173/paper/" + d 
         }))
-        // const data = [
-        //   {
-        //     id: 1,
-        //     title: 'Paper 1',
-        //     description: 'Abstract......',
-        //     link: 'http://localhost:5173/paper',
-        //   },
-        //   {
-        //     id: 2,
-        //     title: 'Paper 2',
-        //     description: 'Abstract......',
-        //     link: 'http://localhost:5173/paper',
-        //   },
-        // ];
-
         setPaperData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -150,14 +104,14 @@ const Dashboard = () => {
         <h2 style={{margin:'20px'}}>Recommended For You:</h2>
         <Row>
           {recommendations.map((card) => (
-            <Col key={card.id} sm={12} md={6} lg={2}>
+            <Col key={card.paperId} sm={12} md={6} lg={2}>
               <Card style={{ width: '15rem', margin: '10px' }}>
                 <Card.Body>
                   <Card.Title>{card.title}</Card.Title>
                   <Card.Text style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {card.description}
+                    {card.abstract}
                   </Card.Text>
-                  <a href={card.link} target="_self" >Continue Reading...</a>
+                  <a href={"http://localhost:5173/paper/" + card.paperId} target="_self" >Continue Reading...</a>
 
                 </Card.Body>
               </Card>
